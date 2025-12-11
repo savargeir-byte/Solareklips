@@ -1,0 +1,88 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "es-2027-centerline",
+        "name": "Spain 2027 - Centerline",
+        "feature_type": "centerline"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-10.0, 35.5],
+          [-8.5, 36.5],
+          [-6.0, 37.5],
+          [-3.5, 38.0],
+          [-1.0, 38.0],
+          [1.5, 37.0],
+          [3.0, 35.5]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "es-2027-umbra",
+        "name": "Spain 2027 - Umbra (Totality band)",
+        "feature_type": "umbra",
+        "width_km_approx": 200
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-10.5, 34.8],
+            [-9.0, 36.0],
+            [-7.0, 37.0],
+            [-5.0, 37.8],
+            [-3.0, 38.3],
+            [-1.0, 38.5],
+            [1.0, 37.8],
+            [2.5, 36.5],
+            [3.5, 35.0],
+            [3.0, 34.0],
+            [1.0, 35.0],
+            [-1.0, 36.5],
+            [-3.5, 37.0],
+            [-6.0, 36.5],
+            [-8.5, 35.5],
+            [-10.5, 34.8]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "es-2027-penumbra",
+        "name": "Spain 2027 - Penumbra (Partial visibility)",
+        "feature_type": "penumbra"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-12.0, 33.5],
+            [-10.0, 35.5],
+            [-7.5, 37.0],
+            [-5.0, 38.0],
+            [-2.5, 38.8],
+            [0.0, 39.0],
+            [2.5, 38.5],
+            [4.5, 37.0],
+            [5.5, 35.0],
+            [5.0, 33.0],
+            [2.5, 34.0],
+            [0.0, 35.5],
+            [-3.0, 36.5],
+            [-6.5, 36.0],
+            [-9.5, 34.5],
+            [-12.0, 33.5]
+          ]
+        ]
+      }
+    }
+  ]
+}

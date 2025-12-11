@@ -1,0 +1,25 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "lunar-2025-global",
+        "name": "Global Lunar Eclipse 2025",
+        "feature_type": "visibility_zone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-180, -60],
+            [-180, 60],
+            [180, 60],
+            [180, -60],
+            [-180, -60]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+Ég er að byggja Flutter app: "EclipseMap". Markmið: alþjóðlegt app fyrir sól- og tunglmyrkva, með "Iceland hero event" efst. Núna er til basic starter project með main.dart (placeholder). Vinsamlegast útbúðu eftirfarandi í Dart/Flutter kóða og settu í rétt möppuflæði (lib/screens, lib/widgets, lib/services, lib/models):
+
+1) lib/models/eclipse_event.dart
+   - Dart class fyrir EclipseEvent með fields: id, type (solar/lunar), subtype (total/partial/annular/penumbral), startUtc, peakUtc, endUtc, pathGeoJson (string), visibilityRegions (list), description.
+
+2) lib/services/eclipse_service.dart
+   - Service sem les mock JSON (assets/mock/eclipse_events.json) og skilar List<EclipseEvent>.
+   - Ein einföld function: Future<List<EclipseEvent>> fetchMockEvents().
+
+3) lib/screens/event_list_screen.dart
+   - Skjár sem sýnir lista af mock events (title, date, icon). Tap á item → push EventDetailScreen.
+
+4) lib/screens/event_detail_screen.dart
+   - Sýnir event details: date/times, simulated timeline (simple animated progress from start→peak→end using AnimatedContainer or similar), "View on Map" hnapp sem opnar Map skjá (stub).
+
+5) lib/screens/map_screen.dart
+   - Innbyggður flutter_map með morphed polygon layer (les pathGeoJson fyrir event og sýnir overlay).
+
+6) assets/mock/eclipse_events.json
+   - Tvo mock events: ein fyrir Iceland 2026 (solar total) með einni einfaldri geojson path (má vera einföld polygon) og ein global lunar event.
+
+7) Uppfærðu pubspec.yaml til að bæta assets: - assets/mock/eclipse_events.json
+
+Fyrir hvert skjal skrifaðu skýrar TODO athugasemdir þar sem raunveruleg reiknivinna (astronomy) eða network fetch þurfi síðar. Skrifaðu vel-commentaðan, testable kóða sem einfaldar test-run í emulator.
+
+Þú mátt búa til einfaldar widgets fyrir lista og detail view (ekki full UI polish — MVP style). Þegar þú hefur bætt þessum skrám inn, keyr `flutter pub get` og búðu til eina einfaldri unit test sem tryggir að mock JSON parsist í List<EclipseEvent>.
+
+Skoðaðu Riverpod fyrir state management — notaðu ProviderScope og einan Provider fyrir EclipseService.

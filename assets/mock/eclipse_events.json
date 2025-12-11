@@ -1,0 +1,259 @@
+[
+  {
+    "id": "iceland-2026-solar-total",
+    "type": "solar",
+    "subtype": "total",
+    "startUtc": "2026-04-12T14:30:00Z",
+    "peakUtc": "2026-04-12T15:00:00Z",
+    "endUtc": "2026-04-12T15:30:00Z",
+    "pathGeoJson": "assets/geojson/2026_total_solar_umbra.json",
+    "visibilityRegions": [
+      "Iceland",
+      "Greenland (partial)",
+      "Northern Europe (partial)",
+      "North Atlantic"
+    ],
+    "description": "A spectacular total solar eclipse crossing Iceland. Reykjavík and much of the country will experience totality for approximately 2 minutes. This is a rare opportunity for Iceland to witness a complete solar eclipse.",
+    "magnitude": 1.045,
+    "maxDurationSeconds": 138,
+    "centerlineCoords": [64.5, -19.0],
+    "gamma": 0.32,
+    "sarosNumber": 120,
+    "catalog": "NASA-SE-5MCAT",
+    "visibilityScore": 0.78,
+    "kpIndex": 3.2,
+    "localContactTimes": {
+      "Reykjavik": {
+        "start": "2026-04-12T14:32:00Z",
+        "peak": "2026-04-12T15:01:15Z",
+        "end": "2026-04-12T15:32:10Z"
+      },
+      "Akureyri": {
+        "start": "2026-04-12T14:35:00Z",
+        "peak": "2026-04-12T15:03:00Z",
+        "end": "2026-04-12T15:34:00Z"
+      },
+      "Vik": {
+        "start": "2026-04-12T14:31:00Z",
+        "peak": "2026-04-12T15:00:30Z",
+        "end": "2026-04-12T15:31:00Z"
+      }
+    },
+    "shadowWidthKm": 180,
+    "centerLineSpeedKph": 5400,
+    "illustration": "assets/img/solar2026.png"
+  },
+  {
+    "id": "global-2025-lunar-partial",
+    "type": "lunar",
+    "subtype": "partial",
+    "startUtc": "2025-09-07T22:00:00Z",
+    "peakUtc": "2025-09-07T23:30:00Z",
+    "endUtc": "2025-09-08T01:00:00Z",
+    "pathGeoJson": "assets/geo/2025_lunar_partial.json",
+    "visibilityRegions": [
+      "Europe",
+      "Africa",
+      "Asia",
+      "Australia",
+      "Antarctica"
+    ],
+    "description": "A partial lunar eclipse visible from most of the Eastern Hemisphere. The Moon will pass through Earth's partial shadow (penumbra) and a small portion of the full shadow (umbra).",
+    "magnitude": 0.35,
+    "maxDurationSeconds": 3600,
+    "centerlineCoords": [
+      0.0,
+      45.0
+    ],
+    "gamma": -0.45,
+    "sarosNumber": 146,
+    "catalog": "NASA-LE-5MCAT",
+    "visibilityScore": 0.92
+  },
+  {
+    "id": "spain-2027-solar-total",
+    "type": "solar",
+    "subtype": "total",
+    "startUtc": "2027-08-02T09:00:00Z",
+    "peakUtc": "2027-08-02T10:07:00Z",
+    "endUtc": "2027-08-02T11:15:00Z",
+    "pathGeoJson": "assets/geo/2027_spain_path.json",
+    "visibilityRegions": [
+      "Spain",
+      "Gibraltar",
+      "Morocco",
+      "Algeria",
+      "Mediterranean"
+    ],
+    "description": "Total solar eclipse crossing southern Spain and North Africa. Major cities including Gibraltar, Málaga, and parts of Morocco will experience over 4 minutes of totality. One of the longest totalities of the decade.",
+    "magnitude": 1.052,
+    "maxDurationSeconds": 262,
+    "centerlineCoords": [
+      36.5,
+      -3.5
+    ],
+    "gamma": -0.28,
+    "sarosNumber": 136,
+    "catalog": "NASA-SE-5MCAT",
+    "visibilityScore": 0.85,
+    "kpIndex": 2.1
+  },
+  {
+    "id": "chile-2024-solar-total",
+    "type": "solar",
+    "subtype": "total",
+    "startUtc": "2024-12-14T14:30:00Z",
+    "peakUtc": "2024-12-14T15:22:00Z",
+    "endUtc": "2024-12-14T16:15:00Z",
+    "pathGeoJson": "assets/geo/2024_chile_path.json",
+    "visibilityRegions": [
+      "Chile",
+      "Argentina",
+      "South Pacific"
+    ],
+    "description": "Total solar eclipse crossing southern Chile and Argentina. Remote areas in Patagonia will experience totality.",
+    "magnitude": 1.032,
+    "maxDurationSeconds": 152,
+    "centerlineCoords": [-42.0, -71.0],
+    "gamma": -0.42,
+    "sarosNumber": 142,
+    "catalog": "NASA-SE-5MCAT",
+    "visibilityScore": 0.68
+  },
+  {
+    "id": "usa-2026-solar-annular",
+    "type": "solar",
+    "subtype": "annular",
+    "startUtc": "2026-02-17T11:00:00Z",
+    "peakUtc": "2026-02-17T12:15:00Z",
+    "endUtc": "2026-02-17T13:30:00Z",
+    "pathGeoJson": "assets/geo/2026_usa_annular.json",
+    "visibilityRegions": [
+      "Antarctica",
+      "Southern Ocean"
+    ],
+    "description": "Annular solar eclipse primarily visible over Antarctica and the Southern Ocean. A rare opportunity for expedition-based observers.",
+    "magnitude": 0.963,
+    "maxDurationSeconds": 142,
+    "centerlineCoords": [-70.0, 15.0],
+    "gamma": -0.89,
+    "sarosNumber": 121,
+    "catalog": "NASA-SE-5MCAT",
+    "visibilityScore": 0.35
+  },
+  {
+    "id": "australia-2028-solar-total",
+    "type": "solar",
+    "subtype": "total",
+    "startUtc": "2028-07-22T01:30:00Z",
+    "peakUtc": "2028-07-22T02:56:00Z",
+    "endUtc": "2028-07-22T04:20:00Z",
+    "pathGeoJson": "assets/geo/2028_australia_path.json",
+    "visibilityRegions": [
+      "Australia",
+      "New Zealand",
+      "Indonesia"
+    ],
+    "description": "Major total solar eclipse crossing Sydney, Australia. One of the most accessible total eclipses of the decade with over 3 minutes of totality in major cities.",
+    "magnitude": 1.056,
+    "maxDurationSeconds": 203,
+    "centerlineCoords": [-33.8, 151.2],
+    "gamma": 0.18,
+    "sarosNumber": 146,
+    "catalog": "NASA-SE-5MCAT",
+    "visibilityScore": 0.91,
+    "kpIndex": 2.8
+  },
+  {
+    "id": "usa-2033-solar-total",
+    "type": "solar",
+    "subtype": "total",
+    "startUtc": "2033-03-30T17:30:00Z",
+    "peakUtc": "2033-03-30T18:45:00Z",
+    "endUtc": "2033-03-30T20:00:00Z",
+    "pathGeoJson": "assets/geo/2033_usa_path.json",
+    "visibilityRegions": [
+      "Alaska",
+      "Russia (Siberia)",
+      "Arctic Ocean"
+    ],
+    "description": "Total solar eclipse crossing Alaska and eastern Russia. Remote but stunning visibility for northern observers.",
+    "magnitude": 1.046,
+    "maxDurationSeconds": 158,
+    "centerlineCoords": [65.0, -151.0],
+    "gamma": 0.51,
+    "sarosNumber": 136,
+    "catalog": "NASA-SE-5MCAT",
+    "visibilityScore": 0.62
+  },
+  {
+    "id": "africa-2030-solar-annular",
+    "type": "solar",
+    "subtype": "annular",
+    "startUtc": "2030-06-01T04:30:00Z",
+    "peakUtc": "2030-06-01T06:28:00Z",
+    "endUtc": "2030-06-01T08:30:00Z",
+    "pathGeoJson": "assets/geo/2030_africa_annular.json",
+    "visibilityRegions": [
+      "Algeria",
+      "Tunisia",
+      "Greece",
+      "Turkey",
+      "Middle East"
+    ],
+    "description": "Annular solar eclipse crossing North Africa and the Middle East. The 'ring of fire' will be visible for over 5 minutes in some locations.",
+    "magnitude": 0.944,
+    "maxDurationSeconds": 321,
+    "centerlineCoords": [35.0, 25.0],
+    "gamma": 0.31,
+    "sarosNumber": 128,
+    "catalog": "NASA-SE-5MCAT",
+    "visibilityScore": 0.78
+  },
+  {
+    "id": "global-2026-lunar-total",
+    "type": "lunar",
+    "subtype": "total",
+    "startUtc": "2026-03-03T09:30:00Z",
+    "peakUtc": "2026-03-03T11:18:00Z",
+    "endUtc": "2026-03-03T13:05:00Z",
+    "pathGeoJson": "assets/geo/2026_lunar_total.json",
+    "visibilityRegions": [
+      "North America",
+      "South America",
+      "Western Europe",
+      "Western Africa"
+    ],
+    "description": "Total lunar eclipse visible across the Americas and western parts of Europe and Africa. The Moon will pass completely into Earth's umbra for over an hour.",
+    "magnitude": 1.154,
+    "maxDurationSeconds": 3600,
+    "centerlineCoords": [0.0, -80.0],
+    "gamma": 0.28,
+    "sarosNumber": 132,
+    "catalog": "NASA-LE-5MCAT",
+    "visibilityScore": 0.88
+  },
+  {
+    "id": "global-2029-lunar-partial",
+    "type": "lunar",
+    "subtype": "partial",
+    "startUtc": "2029-06-26T01:00:00Z",
+    "peakUtc": "2029-06-26T03:22:00Z",
+    "endUtc": "2029-06-26T05:45:00Z",
+    "pathGeoJson": "assets/geo/2029_lunar_partial.json",
+    "visibilityRegions": [
+      "Asia",
+      "Australia",
+      "Pacific Ocean",
+      "Alaska"
+    ],
+    "description": "Partial lunar eclipse with approximately 60% of the Moon entering Earth's umbra. Well-positioned for observers in the Pacific region.",
+    "magnitude": 0.61,
+    "maxDurationSeconds": 3600,
+    "centerlineCoords": [0.0, 150.0],
+    "gamma": -0.52,
+    "sarosNumber": 140,
+    "catalog": "NASA-LE-5MCAT",
+    "visibilityScore": 0.76
+  }
+]

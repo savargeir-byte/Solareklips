@@ -1,0 +1,103 @@
+{
+  "sources": [
+    {
+      "id": "nasa_eclipse_catalog",
+      "name": "NASA - Five Millennium Catalog (Solar & Lunar)",
+      "type": "catalog",
+      "base_url": "https://eclipse.gsfc.nasa.gov",
+      "endpoints": {
+        "solar_catalog": "/SEpubs/5MCSE.html",
+        "solar_catalog_text": "/SEcat5/SEcatalog.html",
+        "lunar_catalog_index": "/LEcat5/LEcatalog.html"
+      },
+      "notes": "Canonical historical/future eclipse tables and plate maps. Best source for shadow path data to seed precomputed engine."
+    },
+    {
+      "id": "jpl_horizons",
+      "name": "JPL Horizons (SSD API)",
+      "type": "ephemeris",
+      "base_url": "https://ssd-api.jpl.nasa.gov",
+      "endpoints": {
+        "horizons_get": "/horizons.api",
+        "horizons_file": "/doc/horizons_file.html",
+        "doc": "/doc/horizons.html"
+      },
+      "notes": "High-precision ephemerides for Sun/Moon/planets. Use for precise contact times & corrections at given geo locations."
+    },
+    {
+      "id": "usno_aa_api",
+      "name": "USNO Astronomical Applications API",
+      "type": "astronomy",
+      "base_url": "https://aa.usno.navy.mil",
+      "endpoints": {
+        "api_doc": "/data/api",
+        "sun_moon_positions": "/data/altaz"
+      },
+      "notes": "Provides solar/lunar positions, rise/set times and other almanac data. Useful for validation and local-event corrections."
+    },
+    {
+      "id": "noaa_swpc",
+      "name": "NOAA SWPC - Space Weather",
+      "type": "space_weather",
+      "base_url": "https://www.swpc.noaa.gov",
+      "endpoints": {
+        "kp_index": "/products/planetary-k-index",
+        "alerts": "/alerts"
+      },
+      "notes": "Real-time Kp index and solar storm alerts for aurora/visibility and geomagnetic conditions."
+    },
+    {
+      "id": "openweathermap",
+      "name": "OpenWeather One Call / Weather",
+      "type": "weather",
+      "base_url": "https://api.openweathermap.org",
+      "endpoints": {
+        "one_call_3": "/data/3.0/onecall",
+        "current": "/data/2.5/weather"
+      },
+      "notes": "Cloud cover & hourly forecasts for visibility scoring. Requires API key and rate-limit planning."
+    },
+    {
+      "id": "timeanddate",
+      "name": "Timeanddate.com - Developer APIs",
+      "type": "time/astronomy",
+      "base_url": "https://www.timeanddate.com",
+      "endpoints": {
+        "api_services": "/services/api/"
+      },
+      "notes": "Convenient endpoints for local times, sunrise/sunset, moon/sun positions and eclipse listings (commercial tiers)."
+    },
+    {
+      "id": "esa_spaceweather",
+      "name": "ESA SWE - Space Weather Services",
+      "type": "space_weather",
+      "base_url": "https://swe.ssa.esa.int",
+      "endpoints": {
+        "services": "/swe-services-data-download-and-apis"
+      },
+      "notes": "Alternative/backup for space weather products and forecasts."
+    },
+    {
+      "id": "stellarium",
+      "name": "Stellarium (star catalogs & assets)",
+      "type": "stellar_catalog",
+      "base_url": "https://stellarium.org",
+      "endpoints": {
+        "docs": "/doc/",
+        "catalogs": "https://github.com/Stellarium/stellarium"
+      },
+      "notes": "Star catalogs & formats ideal for sky simulation / AR star overlays."
+    },
+    {
+      "id": "visualcrossing",
+      "name": "Visual Crossing Weather",
+      "type": "weather",
+      "base_url": "https://weather.visualcrossing.com",
+      "endpoints": {
+        "forecast": "/VisualCrossingWebServices/rest/services/timeline/"
+      },
+      "notes": "Alternative weather provider with global historical & forecast data, easy bulk querying."
+    }
+  ],
+  "notes": "Use NASA / JPL / USNO for scientific core data. Use NOAA/ESA for space weather. Use OpenWeather or VisualCrossing for clouds/visibility. timeanddate for local convenience endpoints."
+}

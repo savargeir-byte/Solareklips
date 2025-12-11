@@ -1,0 +1,42 @@
+name: eclipse_map
+description: A global eclipse app with Iceland hero event.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=2.18.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  flutter_localizations:
+    sdk: flutter
+  flutter_map: ^4.0.0
+  flutter_riverpod: ^2.0.0
+  dio: ^5.0.0
+  hive: ^2.2.3
+  flutter_local_notifications: ^12.0.0
+  geolocator: ^9.0.2
+  intl: ^0.20.2
+  rive: ^0.13.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/mock/eclipse_events.json
+    - assets/data/api_sources.json
+    - assets/geo/2026_iceland_path.json
+    - assets/geo/2025_lunar_partial.json
+    - assets/geo/2027_spain_path.json
+    - assets/geojson/
+    - assets/geojson/2026_total_solar_centerline.json
+    - assets/geojson/2026_total_solar_umbra.json
+    - assets/geojson/2026_total_solar_penumbra.json
+    - assets/rive/

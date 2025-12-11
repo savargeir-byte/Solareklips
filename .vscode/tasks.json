@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flutter: pub get",
+      "type": "shell",
+      "command": "flutter pub get",
+      "group": "build"
+    },
+    {
+      "label": "Flutter: run (debug)",
+      "type": "shell",
+      "command": "flutter run",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: analyze",
+      "type": "shell",
+      "command": "flutter analyze"
+    },
+    {
+      "label": "Flutter: format",
+      "type": "shell",
+      "command": "flutter format ."
+    }
+  ]
+}
