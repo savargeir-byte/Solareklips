@@ -59,8 +59,8 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
           Positioned.fill(
             child: FlutterMap(
               options: MapOptions(
-                center: widget.centerCoords,
-                zoom: 6.0,
+                initialCenter: widget.centerCoords,
+                initialZoom: 6.0,
                 minZoom: 3.0,
                 maxZoom: 12.0,
               ),

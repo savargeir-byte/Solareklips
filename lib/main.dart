@@ -3,8 +3,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'screens/event_list_screen.dart';
-import 'screens/favorites_screen.dart';
+import 'screens/event_detail_screen.dart';
+import 'models/eclipse_event.dart';
+import 'services/theme_service.dart';
 import 'widgets/eclipse_progress_simulation.dart';
+import 'widgets/photography_assistant.dart';
 
 void main() {
   runApp(const ProviderScope(child: EclipseMapApp()));
@@ -16,59 +19,61 @@ const Color kDarkGray = Color(0xFF1a1a1a);
 const Color kGold = Color(0xFFe4b85f);
 const Color kGoldDim = Color(0xFF8a7344);
 
-class EclipseMapApp extends StatelessWidget {
+class EclipseMapApp extends ConsumerWidget {
   const EclipseMapApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+    
     return MaterialApp(
       title: 'EclipseMap',
       debugShowCheckedModeBanner: false,
+      themeMode: themeMode,
+      theme: EclipseTheme.lightTheme,
+      darkTheme: EclipseTheme.darkTheme,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en'), Locale('is')],
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: kBlack,
-        primaryColor: kGold,
-        colorScheme: const ColorScheme.dark(
-          primary: kGold,
-          secondary: kGold,
-          surface: kDarkGray,
-        ),
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(
-              color: kGold, fontWeight: FontWeight.w300, fontSize: 32),
-          headlineMedium: TextStyle(
-              color: kGold, fontWeight: FontWeight.w400, fontSize: 24),
-          bodyLarge: TextStyle(color: Colors.white70, fontSize: 16),
-          bodyMedium: TextStyle(color: Colors.white60, fontSize: 14),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            foregroundColor: kGold,
-            side: const BorderSide(color: kGold, width: 1.5),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
-        useMaterial3: true,
-      ),
       home: const HomeScreen(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              ref.watch(themeModeProvider) == ThemeMode.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+              color: kGold,
+            ),
+            onPressed: () {
+              ref.read(themeModeProvider.notifier).toggle();
+            },
+            tooltip: 'Toggle Theme',
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert, color: kGold),
+            onPressed: () {
+              _showSettingsSheet(context);
+            },
+            tooltip: 'Settings',
+          ),
+        ],
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(
@@ -115,8 +120,34 @@ class HomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 32),
 
-                  // Countdown
-                  const CountdownWidget(),
+                  // Countdown (tappable)
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EventDetailScreen(
+                            event: EclipseEvent(
+                              id: 'iceland-2026',
+                              type: EclipseType.solar,
+                              subtype: EclipseSubtype.total,
+                              startUtc: DateTime(2026, 4, 12, 14, 30).toUtc(),
+                              peakUtc: DateTime(2026, 4, 12, 15, 0).toUtc(),
+                              endUtc: DateTime(2026, 4, 12, 15, 30).toUtc(),
+                              pathGeoJson: '',
+                              visibilityRegions: ['Iceland'],
+                              description: 'Total Solar Eclipse visible from Iceland',
+                              magnitude: 1.00,
+                              maxDurationSeconds: 180,
+                              centerlineCoords: [64.9631, -19.0208],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: const CountdownWidget(),
+                  ),
 
                   const SizedBox(height: 48),
 
@@ -124,6 +155,45 @@ class HomeScreen extends StatelessWidget {
                   const IconGrid(),
 
                   const SizedBox(height: 40),
+
+                  // Time Travel Mode button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EventDetailScreen(
+                              event: EclipseEvent(
+                                id: 'iceland-2026',
+                                type: EclipseType.solar,
+                                subtype: EclipseSubtype.total,
+                                startUtc: DateTime(2026, 4, 12, 14, 30),
+                                peakUtc: DateTime(2026, 4, 12, 15, 0),
+                                endUtc: DateTime(2026, 4, 12, 15, 30),
+                                pathGeoJson: 'iceland_2026',
+                                visibilityRegions: ['Iceland', 'Greenland'],
+                                description: 'Total Solar Eclipse over Iceland',
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.explore),
+                      label: const Text(
+                        'Event Details',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 16),
 
                   // Full path button
                   SizedBox(
@@ -335,13 +405,25 @@ class IconGrid extends StatelessWidget {
           },
         ),
         _IconButton(
-          icon: Icons.star_outline,
-          label: 'Favorites',
+          icon: Icons.camera_alt_outlined,
+          label: 'Camera',
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const FavoritesScreen(),
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => PhotographyAssistant(
+                event: EclipseEvent(
+                  id: 'iceland-2026',
+                  type: EclipseType.solar,
+                  subtype: EclipseSubtype.total,
+                  startUtc: DateTime(2026, 4, 12, 14, 30),
+                  peakUtc: DateTime(2026, 4, 12, 15, 0),
+                  endUtc: DateTime(2026, 4, 12, 15, 30),
+                  pathGeoJson: 'iceland_2026',
+                  visibilityRegions: ['Iceland'],
+                  description: 'Total Solar Eclipse',
+                ),
               ),
             );
           },
@@ -398,4 +480,67 @@ class _IconButton extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showSettingsSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (context) => Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.settings, color: kGold),
+              const SizedBox(width: 12),
+              Text(
+                'Settings',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: kGold,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          ListTile(
+            leading: const Icon(Icons.notifications_outlined, color: kGold),
+            title: const Text('Notifications'),
+            subtitle: const Text('Eclipse countdown alerts'),
+            trailing: const Icon(Icons.chevron_right, color: kGoldDim),
+            onTap: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Notification settings coming soon!'),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.info_outline, color: kGold),
+            title: const Text('About'),
+            subtitle: const Text('App version and info'),
+            trailing: const Icon(Icons.chevron_right, color: kGoldDim),
+            onTap: () {
+              Navigator.pop(context);
+              showAboutDialog(
+                context: context,
+                applicationName: 'EclipseMap',
+                applicationVersion: '2.0.0',
+                applicationLegalese: '© 2025 Premium Eclipse Features',
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    ),
+  );
 }

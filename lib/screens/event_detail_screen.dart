@@ -5,6 +5,8 @@ import 'package:latlong2/latlong.dart';
 import '../controllers/eclipse_controller.dart';
 import '../models/eclipse_event.dart';
 import '../widgets/eclipse_progress_simulation.dart';
+import '../widgets/corona_painter.dart';
+import '../services/shadow_timing_service.dart';
 import 'eclipse_live_view.dart';
 import 'map_screen.dart';
 
@@ -45,6 +47,43 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  Future<String> _calculateLocalTiming() async {
+    try {
+      // Simple mock location for demo - in production use geolocator
+      const userLat = 64.9631;
+      const userLon = -19.0208;
+      
+      if (widget.event.centerlineCoords == null ||
+          widget.event.maxDurationSeconds == null) {
+        return 'Location data unavailable';
+      }
+
+      final centerlineLat = widget.event.centerlineCoords![0];
+      final centerlineLon = widget.event.centerlineCoords![1];
+      
+      final localDuration = ShadowTimingService.calculateLocalTotality(
+        userLat: userLat,
+        userLon: userLon,
+        centerlineLat: centerlineLat,
+        centerlineLon: centerlineLon,
+        maxShadowWidthMeters: 200000, // ~200km typical umbra width
+        maxTotalitySeconds: widget.event.maxDurationSeconds!,
+      );
+
+      final distance = ShadowTimingService.haversineDistance(
+        userLat,
+        userLon,
+        centerlineLat,
+        centerlineLon,
+      );
+
+      return 'At your location (${distance.toStringAsFixed(0)}m from centerline):\n'
+          'Totality duration: ${ShadowTimingService.formatDuration(localDuration)}';
+    } catch (e) {
+      return 'Unable to calculate local timing';
+    }
   }
 
   @override
@@ -88,6 +127,40 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             ),
 
             const SizedBox(height: 24),
+
+            // Corona Effect Animation
+            Card(
+              color: const Color(0xFF1A1A1A),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Corona & Chromosphere',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: const Color(0xFFE4B85F),
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    const AnimatedCorona(
+                      size: 280,
+                      showChromosphere: true,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Realistic HDR corona with chromosphere red flash',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
 
             // Event times
             const _SectionTitle(title: 'Timeline'),
@@ -167,6 +240,65 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             ),
 
             const SizedBox(height: 24),
+
+            // GPS Shadow Timing Section
+            if (widget.event.centerlineCoords != null &&
+                widget.event.maxDurationSeconds != null)
+              Card(
+                color: const Color(0xFF1A1A1A),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.gps_fixed, color: Color(0xFFE4B85F)),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Local Timing',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  color: const Color(0xFFE4B85F),
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      FutureBuilder<String>(
+                        future: _calculateLocalTiming(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                              snapshot.data!,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            );
+                          }
+                          return const Text(
+                            'Calculating location...',
+                            style: TextStyle(color: Colors.white70),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Maximum duration at centerline: ${ShadowTimingService.formatDuration(widget.event.maxDurationSeconds!.toDouble())}',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            const SizedBox(height: 16),
 
             // Visibility regions
             const _SectionTitle(title: 'Visible From'),

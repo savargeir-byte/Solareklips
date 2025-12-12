@@ -35,13 +35,6 @@ class _EclipseProgressSimulationState extends State<EclipseProgressSimulation>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-
-    // Update progress every second
-    Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 1));
-      if (mounted) setState(() {});
-      return mounted;
-    });
   }
 
   @override

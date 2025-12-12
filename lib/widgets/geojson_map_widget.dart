@@ -118,8 +118,8 @@ class _GeoJsonMapWidgetState extends State<GeoJsonMapWidget> {
 
     return FlutterMap(
       options: MapOptions(
-        center: center,
-        zoom: widget.zoom,
+        initialCenter: center,
+        initialZoom: widget.zoom,
       ),
       children: [
         TileLayer(
@@ -137,7 +137,6 @@ class _GeoJsonMapWidgetState extends State<GeoJsonMapWidget> {
                 color: Colors.amber.withOpacity(0.12),
                 borderColor: Colors.amber.withOpacity(0.45),
                 borderStrokeWidth: 1.5,
-                isFilled: true,
               ),
             ],
           ),
@@ -151,7 +150,6 @@ class _GeoJsonMapWidgetState extends State<GeoJsonMapWidget> {
                 color: const Color(0xFFE4B85F).withOpacity(0.28),
                 borderColor: const Color(0xFFE4B85F),
                 borderStrokeWidth: 2.0,
-                isFilled: true,
               ),
             ],
           ),
@@ -176,7 +174,7 @@ class _GeoJsonMapWidgetState extends State<GeoJsonMapWidget> {
                 point: centerline.first,
                 width: 24,
                 height: 24,
-                builder: (ctx) => const Icon(
+                child: const Icon(
                   Icons.location_on,
                   color: Colors.white,
                   size: 20,
@@ -186,7 +184,7 @@ class _GeoJsonMapWidgetState extends State<GeoJsonMapWidget> {
                 point: centerline.last,
                 width: 24,
                 height: 24,
-                builder: (ctx) => const Icon(
+                child: const Icon(
                   Icons.location_on,
                   color: Colors.white,
                   size: 20,
