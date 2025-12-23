@@ -53,5 +53,8 @@
 	<!-- Motion sensor permissions for tilt shadow feature -->
 	<key>NSMotionUsageDescription</key>
 	<string>This app uses device motion to create interactive shadow effects during eclipse visualization</string>
+	<!-- AdMob App ID -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-1625281157866154~2784126100</string>
 </dict>
 </plist>

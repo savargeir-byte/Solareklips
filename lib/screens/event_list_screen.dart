@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../models/eclipse_event.dart';
+import '../services/admob_service.dart';
 import '../services/eclipse_service.dart';
 import 'event_detail_screen.dart';
 
@@ -18,6 +20,8 @@ class EventListScreen extends ConsumerStatefulWidget {
 class _EventListScreenState extends ConsumerState<EventListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  BannerAd? _bannerAd;
+  bool _isBannerLoaded = false;
 
   @override
   void initState() {
@@ -27,11 +31,29 @@ class _EventListScreenState extends ConsumerState<EventListScreen>
       vsync: this,
       initialIndex: widget.initialTab,
     );
+    _loadBannerAd();
+  }
+
+  void _loadBannerAd() {
+    _bannerAd = AdMobService.createBannerAd(
+      adSize: AdSize.banner,
+      onAdLoaded: (ad) {
+        setState(() {
+          _isBannerLoaded = true;
+        });
+      },
+      onAdFailedToLoad: (ad, error) {
+        ad.dispose();
+        _bannerAd = null;
+      },
+    );
+    _bannerAd?.load();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -102,23 +124,35 @@ class _EventListScreenState extends ConsumerState<EventListScreen>
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: events.length,
-      itemBuilder: (context, index) {
-        final event = events[index];
-        return EventListItem(
-          event: event,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EventDetailScreen(event: event),
-              ),
-            );
-          },
-        );
-      },
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: events.length,
+            itemBuilder: (context, index) {
+              final event = events[index];
+              return EventListItem(
+                event: event,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventDetailScreen(event: event),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+        if (_isBannerLoaded && _bannerAd != null)
+          Container(
+            height: 50,
+            color: Colors.black12,
+            child: AdWidget(ad: _bannerAd!),
+          ),
+      ],
     );
   }
 }

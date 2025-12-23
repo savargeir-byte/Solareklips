@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'models/eclipse_event.dart';
 import 'screens/event_detail_screen.dart';
 import 'screens/event_list_screen.dart';
 import 'screens/map_screen.dart';
+import 'services/admob_service.dart';
 import 'services/theme_service.dart';
 import 'widgets/eclipse_progress_simulation.dart';
 import 'widgets/photography_assistant.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AdMobService.initialize();
   runApp(const ProviderScope(child: EclipseMapApp()));
 }
 
@@ -44,11 +48,49 @@ class EclipseMapApp extends ConsumerWidget {
   }
 }
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  BannerAd? _bannerAd;
+  bool _isBannerLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBannerAd();
+  }
+
+  void _loadBannerAd() {
+    _bannerAd = AdMobService.createBannerAd(
+      adSize: AdSize.banner,
+      onAdLoaded: (ad) {
+        setState(() {
+          _isBannerLoaded = true;
+        });
+      },
+      onAdFailedToLoad: (ad, error) {
+        ad.dispose();
+        _bannerAd = null;
+      },
+    );
+    _bannerAd?.load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -220,12 +262,24 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
+
+                  // AdMob Banner
+                  if (_isBannerLoaded && _bannerAd != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: SizedBox(
+                        height: 50,
+                        child: AdWidget(ad: _bannerAd!),
+                      ),
+                    ),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+      },
     );
   }
 }
