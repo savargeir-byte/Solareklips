@@ -32,9 +32,8 @@ workflows:
       - name: Flutter build ipa
         script: |
           flutter build ipa --release \
-            --build-name=1.0.0 \
-            --build-number=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_ID") + 1)) \
-            --export-options-plist=/Users/builder/export_options.plist
+            --build-name=0.2.0 \
+            --build-number=$BUILD_NUMBER
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -48,9 +47,8 @@ workflows:
           failure: true
       app_store_connect:
         auth: integration
+        # TestFlight only - no App Store submission yet
         submit_to_testflight: true
-        beta_groups:
-          - Internal Testers
         submit_to_app_store: false
 
   android-workflow:
