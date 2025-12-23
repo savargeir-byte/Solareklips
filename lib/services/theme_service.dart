@@ -5,17 +5,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ThemeModeNotifier extends Notifier<ThemeMode> {
   @override
   ThemeMode build() => ThemeMode.dark;
-  
+
   void toggle() {
     state = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
   }
-  
+
   void setMode(ThemeMode mode) {
     state = mode;
   }
 }
 
-final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(() => ThemeModeNotifier());
+final themeModeProvider =
+    NotifierProvider<ThemeModeNotifier, ThemeMode>(() => ThemeModeNotifier());
 
 /// Eclipse-optimized theme service
 class EclipseTheme {
@@ -25,7 +26,7 @@ class EclipseTheme {
   static const Color darkPrimary = Color(0xFFE4B85F); // Gold
   static const Color darkSecondary = Color(0xFF8A7344); // Dim gold
   static const Color darkAccent = Color(0xFFFF6B35); // Solar orange
-  
+
   // Light theme colors
   static const Color lightBackground = Color(0xFFFAF9F6);
   static const Color lightSurface = Color(0xFFFFFFFF);
@@ -38,19 +39,15 @@ class EclipseTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: darkBackground,
-      
       colorScheme: const ColorScheme.dark(
         primary: darkPrimary,
         secondary: darkSecondary,
         surface: darkSurface,
-        background: darkBackground,
         error: Color(0xFFCF6679),
         onPrimary: Colors.black,
         onSecondary: Colors.white,
         onSurface: Colors.white,
-        onBackground: Colors.white,
       ),
-
       appBarTheme: const AppBarTheme(
         backgroundColor: darkSurface,
         elevation: 0,
@@ -61,7 +58,6 @@ class EclipseTheme {
           fontWeight: FontWeight.w500,
         ),
       ),
-
       cardTheme: CardThemeData(
         color: darkSurface,
         elevation: 4,
@@ -70,7 +66,6 @@ class EclipseTheme {
           side: BorderSide(color: darkPrimary.withOpacity(0.2), width: 1),
         ),
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: darkPrimary,
@@ -81,7 +76,6 @@ class EclipseTheme {
           ),
         ),
       ),
-
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           fontSize: 57,
@@ -112,7 +106,6 @@ class EclipseTheme {
           color: Colors.white70,
         ),
       ),
-
       iconTheme: const IconThemeData(
         color: darkPrimary,
       ),
@@ -124,19 +117,15 @@ class EclipseTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       scaffoldBackgroundColor: lightBackground,
-      
       colorScheme: const ColorScheme.light(
         primary: lightPrimary,
         secondary: lightSecondary,
         surface: lightSurface,
-        background: lightBackground,
         error: Color(0xFFB00020),
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: Colors.black,
-        onBackground: Colors.black,
       ),
-
       appBarTheme: const AppBarTheme(
         backgroundColor: lightSurface,
         elevation: 2,
@@ -147,7 +136,6 @@ class EclipseTheme {
           fontWeight: FontWeight.w500,
         ),
       ),
-
       cardTheme: CardThemeData(
         color: lightSurface,
         elevation: 2,
@@ -155,7 +143,6 @@ class EclipseTheme {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: lightPrimary,
@@ -166,7 +153,6 @@ class EclipseTheme {
           ),
         ),
       ),
-
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           fontSize: 57,
@@ -197,7 +183,6 @@ class EclipseTheme {
           color: Colors.black54,
         ),
       ),
-
       iconTheme: const IconThemeData(
         color: lightPrimary,
       ),

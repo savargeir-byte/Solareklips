@@ -85,13 +85,13 @@ class TiltedShadowPainter extends CustomPainter {
     // Apply tilt transformation
     canvas.save();
     canvas.translate(center.dx, center.dy);
-    
+
     // Apply perspective-like skew based on tilt
     final skewMatrix = Matrix4.identity()
       ..setEntry(3, 2, 0.001)
       ..rotateX(tiltY)
       ..rotateY(-tiltX);
-    
+
     canvas.transform(skewMatrix.storage);
     canvas.translate(-center.dx, -center.dy);
 
@@ -205,7 +205,7 @@ class _TiltShadowDemoState extends State<TiltShadowDemo>
                 builder: (context, child) {
                   return CustomPaint(
                     painter: TiltedShadowPainter(
-                      position: Offset(150, 150),
+                      position: const Offset(150, 150),
                       progress: _controller.value,
                       scale: 1.0,
                       rotation: 0.0,

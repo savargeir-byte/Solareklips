@@ -26,6 +26,7 @@ class EclipseProgressSimulation extends StatefulWidget {
 class _EclipseProgressSimulationState extends State<EclipseProgressSimulation>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ticker;
+  late final AnimationController _progressController;
 
   @override
   void initState() {
@@ -35,44 +36,41 @@ class _EclipseProgressSimulationState extends State<EclipseProgressSimulation>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
+    
+    // Animated progress for demonstration (cycles through eclipse in 8 seconds)
+    _progressController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    )..repeat();
   }
 
   @override
   void dispose() {
     _ticker.dispose();
+    _progressController.dispose();
     super.dispose();
   }
 
   double _progress() {
-    final now = DateTime.now().toUtc();
-    final start = widget.start.toUtc();
-    final end = widget.end.toUtc();
-    if (now.isBefore(start)) return 0.0;
-    if (now.isAfter(end)) return 1.0;
-    final total = end.difference(start).inSeconds.toDouble();
-    final elapsed = now.difference(start).inSeconds.toDouble().clamp(0, total);
-    return elapsed / total;
+    // Use animated progress for live demo
+    return _progressController.value;
   }
 
   double _peakProgress() {
-    final start = widget.start.toUtc();
-    final end = widget.end.toUtc();
-    final peak = widget.peak.toUtc();
-    final total = end.difference(start).inSeconds.toDouble();
-    final peakElapsed = peak.difference(start).inSeconds.toDouble();
-    return peakElapsed / total;
+    // Peak at 50% of the animation
+    return 0.5;
   }
 
   @override
   Widget build(BuildContext context) {
-    final p = _progress();
-    final peakP = _peakProgress();
-
     return SizedBox(
       height: widget.height,
       child: AnimatedBuilder(
-        animation: _ticker,
+        animation: Listenable.merge([_ticker, _progressController]),
         builder: (context, _) {
+          final p = _progress();
+          final peakP = _peakProgress();
+          
           return CustomPaint(
             painter: _EclipsePainter(
               progress: p,

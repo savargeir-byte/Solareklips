@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../models/eclipse_event.dart';
 
 /// Professional photography assistant for eclipse photography
@@ -143,7 +145,6 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
                     if (_isRunning) ...[
                       Center(
                         child: Column(
@@ -232,11 +233,11 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
             // Quick tips
             Card(
               color: Colors.amber[50],
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       '💡 Pro Tips',
                       style: TextStyle(
@@ -260,12 +261,12 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
             const SizedBox(height: 16),
 
             // Equipment checklist
-            Card(
+            const Card(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       '📋 Equipment Checklist',
                       style: TextStyle(
@@ -345,7 +346,8 @@ class _SettingsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: settings.filter.contains('Remove') || settings.filter.contains('NOW')
+                color: settings.filter.contains('Remove') ||
+                        settings.filter.contains('NOW')
                     ? Colors.red.withOpacity(0.1)
                     : Colors.blue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(4),
@@ -357,7 +359,8 @@ class _SettingsCard extends StatelessWidget {
                         ? Icons.block
                         : Icons.check_circle,
                     size: 16,
-                    color: settings.filter.contains('Remove') || settings.filter.contains('NOW')
+                    color: settings.filter.contains('Remove') ||
+                            settings.filter.contains('NOW')
                         ? Colors.red
                         : Colors.blue,
                   ),
@@ -368,7 +371,8 @@ class _SettingsCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: settings.filter.contains('Remove') || settings.filter.contains('NOW')
+                        color: settings.filter.contains('Remove') ||
+                                settings.filter.contains('NOW')
                             ? Colors.red
                             : Colors.blue,
                       ),

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'screens/event_list_screen.dart';
-import 'screens/event_detail_screen.dart';
 import 'models/eclipse_event.dart';
+import 'screens/event_detail_screen.dart';
+import 'screens/event_list_screen.dart';
+import 'screens/map_screen.dart';
 import 'services/theme_service.dart';
 import 'widgets/eclipse_progress_simulation.dart';
 import 'widgets/photography_assistant.dart';
@@ -25,7 +26,7 @@ class EclipseMapApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
-    
+
     return MaterialApp(
       title: 'EclipseMap',
       debugShowCheckedModeBanner: false,
@@ -137,7 +138,8 @@ class HomeScreen extends ConsumerWidget {
                               endUtc: DateTime(2026, 4, 12, 15, 30).toUtc(),
                               pathGeoJson: '',
                               visibilityRegions: ['Iceland'],
-                              description: 'Total Solar Eclipse visible from Iceland',
+                              description:
+                                  'Total Solar Eclipse visible from Iceland',
                               magnitude: 1.00,
                               maxDurationSeconds: 180,
                               centerlineCoords: [64.9631, -19.0208],
@@ -192,7 +194,7 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 16),
 
                   // Full path button
@@ -204,7 +206,7 @@ class HomeScreen extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const EventListScreen(),
+                            builder: (context) => const EventListScreen(initialTab: 0),
                           ),
                         );
                       },
@@ -286,19 +288,47 @@ class EclipsePainter extends CustomPainter {
 }
 
 // Countdown widget
-class CountdownWidget extends StatelessWidget {
+class CountdownWidget extends StatefulWidget {
   const CountdownWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: Replace with real countdown calculation
-    final targetDate = DateTime(2026, 4, 12, 15, 0);
-    final now = DateTime.now();
-    final difference = targetDate.difference(now);
+  State<CountdownWidget> createState() => _CountdownWidgetState();
+}
 
+class _CountdownWidgetState extends State<CountdownWidget> {
+  late DateTime targetDate;
+  late Duration difference;
+  
+  @override
+  void initState() {
+    super.initState();
+    targetDate = DateTime(2026, 4, 12, 15, 0);
+    _updateCountdown();
+    // Update every second
+    Future.doWhile(() async {
+      await Future.delayed(const Duration(seconds: 1));
+      if (mounted) {
+        _updateCountdown();
+        return true;
+      }
+      return false;
+    });
+  }
+
+  void _updateCountdown() {
+    if (mounted) {
+      setState(() {
+        difference = targetDate.difference(DateTime.now());
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final days = difference.inDays;
     final hours = difference.inHours % 24;
     final minutes = difference.inMinutes % 60;
+    final seconds = difference.inSeconds % 60;
 
     return Column(
       children: [
@@ -318,6 +348,8 @@ class CountdownWidget extends StatelessWidget {
             _CountdownUnit(value: hours, label: 'HRS'),
             const SizedBox(width: 24),
             _CountdownUnit(value: minutes, label: 'MIN'),
+            const SizedBox(width: 24),
+            _CountdownUnit(value: seconds, label: 'SEC'),
           ],
         ),
       ],
@@ -374,7 +406,7 @@ class IconGrid extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const EventListScreen(),
+                builder: (context) => const EventListScreen(initialTab: 0),
               ),
             );
           },
@@ -386,7 +418,7 @@ class IconGrid extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const EventListScreen(),
+                builder: (context) => const EventListScreen(initialTab: 1),
               ),
             );
           },
@@ -395,11 +427,22 @@ class IconGrid extends StatelessWidget {
           icon: Icons.map_outlined,
           label: 'Map',
           onTap: () {
-            // TODO: Navigate to map with Iceland event
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const EventListScreen(),
+                builder: (context) => MapScreen(
+                  event: EclipseEvent(
+                    id: 'iceland-2026',
+                    type: EclipseType.solar,
+                    subtype: EclipseSubtype.total,
+                    startUtc: DateTime(2026, 4, 12, 14, 30),
+                    peakUtc: DateTime(2026, 4, 12, 15, 0),
+                    endUtc: DateTime(2026, 4, 12, 15, 30),
+                    pathGeoJson: 'iceland_2026',
+                    visibilityRegions: ['Iceland'],
+                    description: 'Total Solar Eclipse',
+                  ),
+                ),
               ),
             );
           },

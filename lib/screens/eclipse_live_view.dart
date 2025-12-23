@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+
 import '../controllers/eclipse_controller.dart';
-import '../widgets/eclipse_shadow_painter.dart';
 import '../main.dart';
+import '../widgets/eclipse_shadow_painter.dart';
 
 /// Full-page live eclipse view with animated shadow overlay on map
 class EclipseLiveView extends StatefulWidget {

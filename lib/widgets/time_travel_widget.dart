@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/eclipse_event.dart';
 import '../widgets/eclipse_shadow_painter.dart';
 
@@ -72,7 +73,7 @@ class _TimeTravelModeState extends State<TimeTravelMode>
     final duration = widget.event.endUtc.difference(widget.event.startUtc);
     final elapsed = duration * progress;
     final targetTime = widget.event.startUtc.add(elapsed);
-    
+
     return '${targetTime.toLocal().hour.toString().padLeft(2, '0')}:'
         '${targetTime.toLocal().minute.toString().padLeft(2, '0')}:'
         '${targetTime.toLocal().second.toString().padLeft(2, '0')}';
@@ -141,7 +142,7 @@ class _TimeTravelModeState extends State<TimeTravelMode>
                   ),
                 ),
                 const SizedBox(height: 8),
-                
+
                 // Phase display
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -179,7 +180,8 @@ class _TimeTravelModeState extends State<TimeTravelMode>
                 // Timeline slider
                 Row(
                   children: [
-                    const Icon(Icons.wb_twilight, color: Color(0xFFE4B85F), size: 20),
+                    const Icon(Icons.wb_twilight,
+                        color: Color(0xFFE4B85F), size: 20),
                     Expanded(
                       child: Slider(
                         value: _sliderValue,
@@ -193,7 +195,8 @@ class _TimeTravelModeState extends State<TimeTravelMode>
                         inactiveColor: Colors.grey[800],
                       ),
                     ),
-                    const Icon(Icons.nightlight, color: Color(0xFFE4B85F), size: 20),
+                    const Icon(Icons.nightlight,
+                        color: Color(0xFFE4B85F), size: 20),
                   ],
                 ),
 
@@ -241,9 +244,10 @@ class _TimeTravelModeState extends State<TimeTravelMode>
                     ),
                     const SizedBox(width: 12),
                     ...['0.5x', '1x', '2x', '5x'].map((speed) {
-                      final speedValue = double.parse(speed.replaceAll('x', ''));
+                      final speedValue =
+                          double.parse(speed.replaceAll('x', ''));
                       final isSelected = _playbackSpeed == speedValue;
-                      
+
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: OutlinedButton(

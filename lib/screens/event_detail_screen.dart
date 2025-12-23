@@ -4,9 +4,9 @@ import 'package:latlong2/latlong.dart';
 
 import '../controllers/eclipse_controller.dart';
 import '../models/eclipse_event.dart';
-import '../widgets/eclipse_progress_simulation.dart';
-import '../widgets/corona_painter.dart';
 import '../services/shadow_timing_service.dart';
+import '../widgets/corona_painter.dart';
+import '../widgets/eclipse_progress_simulation.dart';
 import 'eclipse_live_view.dart';
 import 'map_screen.dart';
 
@@ -54,7 +54,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
       // Simple mock location for demo - in production use geolocator
       const userLat = 64.9631;
       const userLon = -19.0208;
-      
+
       if (widget.event.centerlineCoords == null ||
           widget.event.maxDurationSeconds == null) {
         return 'Location data unavailable';
@@ -62,7 +62,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
       final centerlineLat = widget.event.centerlineCoords![0];
       final centerlineLon = widget.event.centerlineCoords![1];
-      
+
       final localDuration = ShadowTimingService.calculateLocalTotality(
         userLat: userLat,
         userLon: userLon,

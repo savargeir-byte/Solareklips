@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+
 import '../models/eclipse_event.dart';
 
 /// Smart notification service for eclipse events
@@ -13,7 +14,8 @@ class NotificationService {
   static Future<void> initialize() async {
     if (_initialized) return;
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -102,7 +104,8 @@ class NotificationService {
       id: '${event.id}_c2'.hashCode,
       title: '🌑 TOTALITY! GLASSES OFF!',
       body: 'Remove your glasses NOW! Enjoy the corona!',
-      scheduledDate: event.peakUtc.subtract(Duration(seconds: event.maxDurationSeconds ?? 120 ~/ 2)),
+      scheduledDate: event.peakUtc
+          .subtract(Duration(seconds: event.maxDurationSeconds ?? 120 ~/ 2)),
     );
 
     // Peak
@@ -118,7 +121,8 @@ class NotificationService {
       id: '${event.id}_c3'.hashCode,
       title: '⚠️ GLASSES ON!',
       body: 'Put your glasses back on NOW! Diamond ring visible!',
-      scheduledDate: event.peakUtc.add(Duration(seconds: event.maxDurationSeconds ?? 120 ~/ 2)),
+      scheduledDate: event.peakUtc
+          .add(Duration(seconds: event.maxDurationSeconds ?? 120 ~/ 2)),
     );
 
     // Fourth contact (C4) - Eclipse ends
@@ -142,7 +146,7 @@ class NotificationService {
       return;
     }
 
-    final androidDetails = AndroidNotificationDetails(
+    const androidDetails = AndroidNotificationDetails(
       'eclipse_alerts',
       'Eclipse Alerts',
       channelDescription: 'Important notifications for eclipse events',
@@ -158,7 +162,7 @@ class NotificationService {
       presentSound: true,
     );
 
-    final details = NotificationDetails(
+    const details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
@@ -228,7 +232,8 @@ class NotificationService {
   }
 
   /// Get pending notifications
-  static Future<List<PendingNotificationRequest>> getPendingNotifications() async {
+  static Future<List<PendingNotificationRequest>>
+      getPendingNotifications() async {
     return await _notifications.pendingNotificationRequests();
   }
 }

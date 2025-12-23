@@ -42,10 +42,10 @@ class PathTracingPainter extends CustomPainter {
 
     // Convert LatLng to screen coordinates
     final screenPath = ui.Path();
-    
+
     for (int i = 0; i < pathPoints.length; i++) {
       final point = _latLngToOffset(pathPoints[i], size);
-      
+
       if (i == 0) {
         screenPath.moveTo(point.dx, point.dy);
       } else {
@@ -55,25 +55,25 @@ class PathTracingPainter extends CustomPainter {
 
     // Draw glow
     canvas.drawPath(screenPath, glowPaint);
-    
+
     // Draw main path
     canvas.drawPath(screenPath, paint);
 
     // Draw animated head marker
     if (pathPoints.isNotEmpty) {
       final headPoint = _latLngToOffset(pathPoints.last, size);
-      
+
       final headPaint = Paint()
         ..color = pathColor
         ..style = PaintingStyle.fill;
-      
+
       canvas.drawCircle(headPoint, strokeWidth * 2, headPaint);
-      
+
       // Pulsing effect on head
       final pulsePaint = Paint()
         ..color = pathColor.withOpacity(0.4)
         ..style = PaintingStyle.fill;
-      
+
       canvas.drawCircle(headPoint, strokeWidth * 4, pulsePaint);
     }
   }
@@ -82,17 +82,16 @@ class PathTracingPainter extends CustomPainter {
     // Simple equirectangular projection
     // Map latitude/longitude to canvas coordinates
     // This is a simplified version - for real maps use proper projection
-    
+
     final x = ((latLng.longitude + 180) / 360) * size.width;
     final y = ((90 - latLng.latitude) / 180) * size.height;
-    
+
     return Offset(x, y);
   }
 
   @override
   bool shouldRepaint(PathTracingPainter oldDelegate) {
-    return oldDelegate.progress != progress ||
-        oldDelegate.path != path;
+    return oldDelegate.progress != progress || oldDelegate.path != path;
   }
 }
 
@@ -182,16 +181,17 @@ class ShadowPathPainter extends CustomPainter {
       final penumbraPoints = _convertPath(penumbraPath, size, progress);
       if (penumbraPoints.length > 2) {
         final penumbraPathObj = ui.Path();
-        penumbraPathObj.moveTo(penumbraPoints.first.dx, penumbraPoints.first.dy);
+        penumbraPathObj.moveTo(
+            penumbraPoints.first.dx, penumbraPoints.first.dy);
         for (int i = 1; i < penumbraPoints.length; i++) {
           penumbraPathObj.lineTo(penumbraPoints[i].dx, penumbraPoints[i].dy);
         }
         penumbraPathObj.close();
-        
+
         final penumbraPaint = Paint()
           ..color = Colors.amber.withOpacity(0.15)
           ..style = PaintingStyle.fill;
-        
+
         canvas.drawPath(penumbraPathObj, penumbraPaint);
       }
     }
@@ -206,11 +206,11 @@ class ShadowPathPainter extends CustomPainter {
           umbraPathObj.lineTo(umbraPoints[i].dx, umbraPoints[i].dy);
         }
         umbraPathObj.close();
-        
+
         final umbraPaint = Paint()
           ..color = const Color(0xFFE4B85F).withOpacity(0.3)
           ..style = PaintingStyle.fill;
-        
+
         canvas.drawPath(umbraPathObj, umbraPaint);
       }
     }

@@ -6,16 +6,49 @@ import '../services/eclipse_service.dart';
 import 'event_detail_screen.dart';
 
 /// Screen displaying a list of upcoming eclipse events
-class EventListScreen extends ConsumerWidget {
-  const EventListScreen({super.key});
+class EventListScreen extends ConsumerStatefulWidget {
+  final int initialTab;
+  
+  const EventListScreen({super.key, this.initialTab = 0});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<EventListScreen> createState() => _EventListScreenState();
+}
+
+class _EventListScreenState extends ConsumerState<EventListScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.initialTab,
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final eventsAsync = ref.watch(eclipseEventsProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Eclipse Events'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(icon: Icon(Icons.wb_sunny), text: 'Solar'),
+            Tab(icon: Icon(Icons.nightlight_round), text: 'Lunar'),
+          ],
+        ),
       ),
       body: eventsAsync.when(
         data: (events) {
@@ -24,23 +57,20 @@ class EventListScreen extends ConsumerWidget {
               child: Text('No eclipse events found'),
             );
           }
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              final event = events[index];
-              return EventListItem(
-                event: event,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EventDetailScreen(event: event),
-                    ),
-                  );
-                },
-              );
-            },
+          
+          final solarEvents = events
+              .where((e) => e.type == EclipseType.solar)
+              .toList();
+          final lunarEvents = events
+              .where((e) => e.type == EclipseType.lunar)
+              .toList();
+
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              _buildEventList(context, solarEvents, 'No solar eclipses found'),
+              _buildEventList(context, lunarEvents, 'No lunar eclipses found'),
+            ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -62,6 +92,33 @@ class EventListScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildEventList(BuildContext context, List<EclipseEvent> events, String emptyMessage) {
+    if (events.isEmpty) {
+      return Center(
+        child: Text(emptyMessage),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: events.length,
+      itemBuilder: (context, index) {
+        final event = events[index];
+        return EventListItem(
+          event: event,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EventDetailScreen(event: event),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

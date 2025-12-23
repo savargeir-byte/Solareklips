@@ -12,12 +12,12 @@ class GeoJsonMapWidget extends StatefulWidget {
   final LatLng fallbackCenter;
   final double zoom;
 
-  GeoJsonMapWidget({
+  const GeoJsonMapWidget({
     required this.assetPath,
     LatLng? fallbackCenter,
     this.zoom = 5.5,
     super.key,
-  }) : fallbackCenter = fallbackCenter ?? LatLng(64.1466, -21.9426);
+  }) : fallbackCenter = fallbackCenter ?? const LatLng(64.1466, -21.9426);
 
   @override
   State<GeoJsonMapWidget> createState() => _GeoJsonMapWidgetState();
@@ -82,7 +82,7 @@ class _GeoJsonMapWidgetState extends State<GeoJsonMapWidget> {
     } catch (e) {
       setState(() {
         isLoading = false;
-        errorMessage = 'Failed to load GeoJSON: $e';
+        errorMessage = 'Failed to load map data: $e';
       });
     }
   }

@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 /// Realistic corona effect with HDR glow and chromosphere red flash
@@ -15,7 +15,7 @@ class CoronaPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    
+
     // Corona glow with HDR effect using screen blend mode
     final coronaPaint = Paint()
       ..blendMode = BlendMode.screen
@@ -40,13 +40,14 @@ class CoronaPainter extends CustomPainter {
             Colors.red.withOpacity(0.0),
           ],
           stops: const [0.0, 1.0],
-        ).createShader(Rect.fromCircle(center: center, radius: size.width * 0.3));
+        ).createShader(
+            Rect.fromCircle(center: center, radius: size.width * 0.3));
 
       canvas.drawCircle(center, size.width * 0.3, chromoPaint);
     }
 
     // Inner corona spikes (subtle)
-    final spikeCount = 12;
+    const spikeCount = 12;
     final spikePaint = Paint()
       ..color = Colors.amber.withOpacity(0.15 * intensity)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8.0)
@@ -57,17 +58,17 @@ class CoronaPainter extends CustomPainter {
       final angle = (i * 2 * 3.14159) / spikeCount;
       final startRadius = size.width * 0.15;
       final endRadius = size.width * 0.4;
-      
+
       final start = Offset(
         center.dx + startRadius * cos(angle),
         center.dy + startRadius * sin(angle),
       );
-      
+
       final end = Offset(
         center.dx + endRadius * cos(angle),
         center.dy + endRadius * sin(angle),
       );
-      
+
       canvas.drawLine(start, end, spikePaint);
     }
   }
@@ -75,7 +76,7 @@ class CoronaPainter extends CustomPainter {
   @override
   bool shouldRepaint(CoronaPainter oldDelegate) {
     return oldDelegate.intensity != intensity ||
-           oldDelegate.showChromosphere != showChromosphere;
+        oldDelegate.showChromosphere != showChromosphere;
   }
 }
 

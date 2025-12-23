@@ -30,13 +30,13 @@ class ShadowTimingService {
   }
 
   /// Calculate local totality duration based on distance from centerline
-  /// 
+  ///
   /// Parameters:
   /// - [userLat], [userLon]: User's GPS coordinates
   /// - [centerlineLat], [centerlineLon]: Closest point on path centerline
   /// - [maxShadowWidthMeters]: Total width of umbra shadow
   /// - [maxTotalitySeconds]: Maximum duration at centerline
-  /// 
+  ///
   /// Returns: Estimated totality duration in seconds at user location
   static double calculateLocalTotality({
     required double userLat,
@@ -66,10 +66,11 @@ class ShadowTimingService {
     // Duration decreases as you move away from centerline
     // Using parabolic falloff for more realistic estimation
     final durationFactor = 1 - (offAxisRatio * offAxisRatio);
-    
+
     return maxTotalitySeconds * durationFactor;
   }
-  /// 
+
+  ///
   /// Returns: [lat, lon] of closest centerline point
   static List<double> findClosestCenterlinePoint({
     required double userLat,
@@ -101,7 +102,7 @@ class ShadowTimingService {
   }
 
   /// Calculate shadow speed at a given point
-  /// 
+  ///
   /// Returns: Shadow speed in km/h
   static double calculateShadowSpeed({
     required double latitude,
@@ -111,7 +112,7 @@ class ShadowTimingService {
     // Faster near poles, slower near equator
     final latRad = _toRadians(latitude);
     final speedFactor = 1.0 + (0.5 * cos(latRad).abs());
-    
+
     return baseSpeedKph * speedFactor;
   }
 
@@ -132,7 +133,7 @@ class ShadowTimingService {
   }
 
   /// Calculate contact times based on user location and eclipse timing
-  /// 
+  ///
   /// Returns map with 'c1', 'c2', 'c3', 'c4' keys (first through fourth contact)
   static Map<String, DateTime> calculateContactTimes({
     required double userLat,
@@ -163,10 +164,12 @@ class ShadowTimingService {
     const partialPhaseDuration = 3600; // seconds
 
     return {
-      'c1': peakUtc.subtract(Duration(seconds: (partialPhaseDuration + halfTotality).round())),
+      'c1': peakUtc.subtract(
+          Duration(seconds: (partialPhaseDuration + halfTotality).round())),
       'c2': peakUtc.subtract(Duration(seconds: halfTotality.round())),
       'c3': peakUtc.add(Duration(seconds: halfTotality.round())),
-      'c4': peakUtc.add(Duration(seconds: (partialPhaseDuration + halfTotality).round())),
+      'c4': peakUtc.add(
+          Duration(seconds: (partialPhaseDuration + halfTotality).round())),
     };
   }
 }
