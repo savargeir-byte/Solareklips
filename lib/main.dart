@@ -14,7 +14,10 @@ import 'widgets/photography_assistant.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await AdMobService.initialize();
+  print('📱 AdMob initialized');
+  
   runApp(const ProviderScope(child: EclipseMapApp()));
 }
 

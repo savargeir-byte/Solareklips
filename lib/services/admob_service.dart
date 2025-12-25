@@ -25,8 +25,14 @@ class AdMobService {
       size: adSize,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: onAdLoaded,
-        onAdFailedToLoad: onAdFailedToLoad,
+        onAdLoaded: (ad) {
+          print('✅ Ad loaded successfully');
+          onAdLoaded(ad);
+        },
+        onAdFailedToLoad: (ad, error) {
+          print('❌ Ad failed to load: ${error.code} - ${error.message}');
+          onAdFailedToLoad(ad, error);
+        },
       ),
     );
   }

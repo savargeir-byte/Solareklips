@@ -53,6 +53,9 @@
 	<!-- Motion sensor permissions for tilt shadow feature -->
 	<key>NSMotionUsageDescription</key>
 	<string>This app uses device motion to create interactive shadow effects during eclipse visualization</string>
+	<!-- App Tracking Transparency for personalized ads -->
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This app uses tracking to show you personalized ads. You can change this in Settings.</string>
 	<!-- AdMob App ID -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-1625281157866154~2784126100</string>
