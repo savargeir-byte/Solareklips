@@ -11,6 +11,49 @@ class AdMobService {
     throw UnsupportedError('Unsupported platform');
   }
 
+  /// Request user consent for GDPR/CCPA compliance
+  /// Must be called BEFORE MobileAds.instance.initialize()
+  static Future<void> requestConsent() async {
+    final params = ConsentRequestParameters();
+    
+    ConsentInformation.instance.requestConsentInfoUpdate(
+      params,
+      () async {
+        // Consent info updated successfully
+        final status = await ConsentInformation.instance.getConsentStatus();
+        print('🔐 Consent status: $status');
+        
+        if (await ConsentInformation.instance.isConsentFormAvailable()) {
+          _loadConsentForm();
+        }
+      },
+      (FormError error) {
+        // Handle error
+        print('❌ Consent error: ${error.errorCode} - ${error.message}');
+      },
+    );
+  }
+
+  static void _loadConsentForm() {
+    ConsentForm.loadConsentForm(
+      (ConsentForm consentForm) async {
+        final status = await ConsentInformation.instance.getConsentStatus();
+        if (status == ConsentStatus.required) {
+          consentForm.show((FormError? formError) {
+            if (formError != null) {
+              print('❌ Consent form error: ${formError.message}');
+            }
+            // Load another form if consent is still required
+            _loadConsentForm();
+          });
+        }
+      },
+      (FormError formError) {
+        print('❌ Failed to load consent form: ${formError.message}');
+      },
+    );
+  }
+
   static Future<void> initialize() async {
     await MobileAds.instance.initialize();
   }

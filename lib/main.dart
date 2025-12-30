@@ -15,6 +15,9 @@ import 'widgets/photography_assistant.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Handle GDPR/CCPA consent before initializing AdMob
+  await AdMobService.requestConsent();
+  
   await AdMobService.initialize();
   print('📱 AdMob initialized');
   
