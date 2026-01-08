@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import '../models/eclipse_event.dart';
+import 'package:eclipse_map/core/models/eclipse_event.dart';
 
 /// Smart notification service for eclipse events
 class NotificationService {
@@ -40,7 +40,7 @@ class NotificationService {
       id: '${event.id}_30d'.hashCode,
       title: '🌒 Eclipse Alert: 30 Days',
       body: '${event.title} is coming! Book your flights and hotels now.',
-      scheduledDate: event.startUtc.subtract(const Duration(days: 30)),
+      scheduledDate: event.start.subtract(const Duration(days: 30)),
     );
 
     // 7 days before
@@ -48,7 +48,7 @@ class NotificationService {
       id: '${event.id}_7d'.hashCode,
       title: '🌓 Eclipse Alert: 1 Week',
       body: 'One week until ${event.title}. Check weather forecasts!',
-      scheduledDate: event.startUtc.subtract(const Duration(days: 7)),
+      scheduledDate: event.start.subtract(const Duration(days: 7)),
     );
 
     // 24 hours before
@@ -56,7 +56,7 @@ class NotificationService {
       id: '${event.id}_24h'.hashCode,
       title: '🌔 Eclipse Alert: 24 Hours',
       body: 'Tomorrow is the big day! ${event.title}',
-      scheduledDate: event.startUtc.subtract(const Duration(hours: 24)),
+      scheduledDate: event.start.subtract(const Duration(hours: 24)),
     );
 
     // 6 hours before - weather update
@@ -64,7 +64,7 @@ class NotificationService {
       id: '${event.id}_6h'.hashCode,
       title: '☁️ Weather Check: 6 Hours',
       body: 'Check cloud cover forecast for ${event.title}',
-      scheduledDate: event.startUtc.subtract(const Duration(hours: 6)),
+      scheduledDate: event.start.subtract(const Duration(hours: 6)),
     );
 
     // 1 hour before
@@ -72,7 +72,7 @@ class NotificationService {
       id: '${event.id}_1h'.hashCode,
       title: '🌕 Eclipse Starting Soon!',
       body: '${event.title} begins in 1 hour. Get to your viewing location!',
-      scheduledDate: event.startUtc.subtract(const Duration(hours: 1)),
+      scheduledDate: event.start.subtract(const Duration(hours: 1)),
     );
 
     // 15 minutes before
@@ -80,7 +80,7 @@ class NotificationService {
       id: '${event.id}_15m'.hashCode,
       title: '⏰ 15 Minutes to First Contact',
       body: 'Put on your eclipse glasses and get ready!',
-      scheduledDate: event.startUtc.subtract(const Duration(minutes: 15)),
+      scheduledDate: event.start.subtract(const Duration(minutes: 15)),
     );
 
     // First contact (C1)
@@ -88,7 +88,7 @@ class NotificationService {
       id: '${event.id}_c1'.hashCode,
       title: '🌑 First Contact!',
       body: 'Eclipse has started! The Moon is touching the Sun.',
-      scheduledDate: event.startUtc,
+      scheduledDate: event.start,
     );
 
     // 2 minutes before totality
@@ -96,7 +96,7 @@ class NotificationService {
       id: '${event.id}_2m'.hashCode,
       title: '⚠️ 2 Minutes to Totality',
       body: 'Watch for shadow bands and prepare for glasses-off!',
-      scheduledDate: event.peakUtc.subtract(const Duration(minutes: 2)),
+      scheduledDate: event.peak.subtract(const Duration(minutes: 2)),
     );
 
     // Second contact (C2) - Totality begins
@@ -104,7 +104,7 @@ class NotificationService {
       id: '${event.id}_c2'.hashCode,
       title: '🌑 TOTALITY! GLASSES OFF!',
       body: 'Remove your glasses NOW! Enjoy the corona!',
-      scheduledDate: event.peakUtc
+      scheduledDate: event.peak
           .subtract(Duration(seconds: event.maxDurationSeconds ?? 120 ~/ 2)),
     );
 
@@ -113,7 +113,7 @@ class NotificationService {
       id: '${event.id}_peak'.hashCode,
       title: '✨ Maximum Eclipse',
       body: 'Peak of totality - look for planets and corona!',
-      scheduledDate: event.peakUtc,
+      scheduledDate: event.peak,
     );
 
     // Third contact (C3) - Totality ends
@@ -121,7 +121,7 @@ class NotificationService {
       id: '${event.id}_c3'.hashCode,
       title: '⚠️ GLASSES ON!',
       body: 'Put your glasses back on NOW! Diamond ring visible!',
-      scheduledDate: event.peakUtc
+      scheduledDate: event.peak
           .add(Duration(seconds: event.maxDurationSeconds ?? 120 ~/ 2)),
     );
 
@@ -130,7 +130,7 @@ class NotificationService {
       id: '${event.id}_c4'.hashCode,
       title: '🌞 Eclipse Complete',
       body: 'The eclipse has ended. What an amazing experience!',
-      scheduledDate: event.endUtc,
+      scheduledDate: event.end,
     );
   }
 

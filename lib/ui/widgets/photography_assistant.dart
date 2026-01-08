@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../models/eclipse_event.dart';
+import 'package:eclipse_map/core/models/eclipse_event.dart';
 
 /// Professional photography assistant for eclipse photography
 class PhotographyAssistant extends StatefulWidget {

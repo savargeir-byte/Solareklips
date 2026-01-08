@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../models/eclipse_event.dart';
-import '../services/admob_service.dart';
-import '../widgets/geojson_map_widget.dart';
+import 'package:eclipse_map/core/models/eclipse_event.dart';
+import 'package:eclipse_map/core/services/admob_service.dart';
+import 'package:eclipse_map/ui/widgets/geojson_map_widget.dart';
 
 /// Interactive map screen showing eclipse path overlay
 /// Uses GeoJsonMapWidget for rendering centerline, umbra, and penumbra

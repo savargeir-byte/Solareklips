@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../models/eclipse_event.dart';
-import '../widgets/eclipse_shadow_painter.dart';
+import 'package:eclipse_map/core/models/eclipse_event.dart';
+import 'package:eclipse_map/ui/painters/eclipse_shadow_painter.dart';
 
 /// Time travel widget for eclipse preview at any time
 class TimeTravelMode extends StatefulWidget {
@@ -70,9 +70,9 @@ class _TimeTravelModeState extends State<TimeTravelMode>
   }
 
   String _getTimeAtProgress(double progress) {
-    final duration = widget.event.endUtc.difference(widget.event.startUtc);
+    final duration = widget.event.end.difference(widget.event.start);
     final elapsed = duration * progress;
-    final targetTime = widget.event.startUtc.add(elapsed);
+    final targetTime = widget.event.start.add(elapsed);
 
     return '${targetTime.toLocal().hour.toString().padLeft(2, '0')}:'
         '${targetTime.toLocal().minute.toString().padLeft(2, '0')}:'

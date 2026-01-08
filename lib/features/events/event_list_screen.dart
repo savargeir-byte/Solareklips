@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../models/eclipse_event.dart';
-import '../services/admob_service.dart';
-import '../services/eclipse_service.dart';
+import 'package:eclipse_map/core/models/eclipse_event.dart';
+import 'package:eclipse_map/core/services/admob_service.dart';
+import 'package:eclipse_map/core/services/eclipse_service.dart';
 import 'event_detail_screen.dart';
 
 /// Screen displaying a list of upcoming eclipse events
@@ -194,7 +194,7 @@ class EventListItem extends StatelessWidget {
             Text(event.dateDisplay),
             const SizedBox(height: 2),
             Text(
-              event.visibilityRegions.take(2).join(', '),
+              event.visibility.take(2).join(', '),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

@@ -22,6 +22,8 @@ dependencies:
   rive: ^0.14.0
   sensors_plus: ^6.0.0
   google_mobile_ads: ^5.2.0
+  camera: ^0.11.0
+  vector_math: ^2.1.4
 
 dev_dependencies:
   flutter_test:

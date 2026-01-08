@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../controllers/eclipse_controller.dart';
-import '../main.dart';
-import '../widgets/eclipse_shadow_painter.dart';
+import 'package:eclipse_map/core/constants.dart';
+import 'package:eclipse_map/features/eclipse/eclipse_controller.dart';
+import 'package:eclipse_map/ui/painters/eclipse_shadow_painter.dart';
 
 /// Full-page live eclipse view with animated shadow overlay on map
 class EclipseLiveView extends StatefulWidget {
@@ -53,7 +53,7 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kBlack,
+      backgroundColor: AppColors.black,
       body: Stack(
         children: [
           // BACKGROUND MAP
@@ -115,15 +115,15 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      kBlack.withOpacity(0.8),
-                      kBlack.withOpacity(0.0),
+                      AppColors.black.withOpacity(0.8),
+                      AppColors.black.withOpacity(0.0),
                     ],
                   ),
                 ),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back, color: kGold),
+                      icon: const Icon(Icons.arrow_back, color: AppColors.gold),
                       onPressed: () => Navigator.pop(context),
                     ),
                     Expanded(
@@ -133,7 +133,7 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                           Text(
                             widget.eventName,
                             style: const TextStyle(
-                              color: kGold,
+                              color: AppColors.gold,
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
@@ -145,7 +145,7 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                               return Text(
                                 widget.controller.phaseName,
                                 style: const TextStyle(
-                                  color: kGoldDim,
+                                  color: AppColors.goldDim,
                                   fontSize: 12,
                                   letterSpacing: 1,
                                 ),
@@ -171,9 +171,9 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   decoration: BoxDecoration(
-                    color: kBlack.withOpacity(0.7),
+                    color: AppColors.black.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: kGold.withOpacity(0.3), width: 1),
+                    border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 1),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -183,7 +183,7 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                         style: const TextStyle(
                           fontSize: 48,
                           fontWeight: FontWeight.w300,
-                          color: kGold,
+                          color: AppColors.gold,
                           height: 1,
                         ),
                       ),
@@ -192,7 +192,7 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                         'Totality Progress',
                         style: TextStyle(
                           fontSize: 12,
-                          color: kGoldDim,
+                          color: AppColors.goldDim,
                           letterSpacing: 1.5,
                         ),
                       ),
@@ -216,8 +216,8 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      kBlack.withOpacity(0.9),
-                      kBlack.withOpacity(0.0),
+                      AppColors.black.withOpacity(0.9),
+                      AppColors.black.withOpacity(0.0),
                     ],
                   ),
                 ),
@@ -234,7 +234,7 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                             Container(
                               height: 4,
                               decoration: BoxDecoration(
-                                color: kDarkGray,
+                                color: AppColors.darkGray,
                                 borderRadius: BorderRadius.circular(2),
                               ),
                               child: FractionallySizedBox(
@@ -246,7 +246,7 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                                       colors: [
                                         Color(0xFF4A148C),
                                         Color(0xFF7B1FA2),
-                                        kGold,
+                                        AppColors.gold,
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(2),
@@ -269,7 +269,7 @@ class _EclipseLiveViewState extends State<EclipseLiveView>
                             Text(
                               widget.controller.timeRemaining,
                               style: const TextStyle(
-                                color: kGold,
+                                color: AppColors.gold,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -302,7 +302,7 @@ class _TimeLabel extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            color: kGoldDim,
+            color: AppColors.goldDim,
             fontSize: 10,
             letterSpacing: 1,
           ),

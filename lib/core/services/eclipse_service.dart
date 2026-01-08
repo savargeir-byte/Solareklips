@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/eclipse_event.dart';
+import 'package:eclipse_map/core/models/eclipse_event.dart';
 
-/// Service for fetching eclipse event data
-/// TODO: Replace mock JSON loader with real API calls (e.g., NASA Eclipse API, custom backend)
+/// Service for fetching eclipse event data from local assets
+/// Follows offline-first architecture - no backend dependencies
 class EclipseService {
-  /// Fetch mock events from bundled JSON asset
+  /// Fetch events from bundled JSON asset
   Future<List<EclipseEvent>> fetchMockEvents() async {
     try {
       // Load the JSON file from assets
@@ -24,23 +24,35 @@ class EclipseService {
           .toList();
 
       // Sort by peak date (ascending)
-      events.sort((a, b) => a.peakUtc.compareTo(b.peakUtc));
+      events.sort((a, b) => a.peak.compareTo(b.peak));
 
       return events;
     } catch (e) {
-      // TODO: Add proper error handling and logging
       throw Exception('Failed to load eclipse events: $e');
     }
   }
 
-  /// TODO: Add method for fetching events from remote API
-  /// Future<List<EclipseEvent>> fetchEventsFromApi() async { ... }
+  /// Filter events by date range
+  List<EclipseEvent> filterByDateRange(
+    List<EclipseEvent> events,
+    DateTime start,
+    DateTime end,
+  ) {
+    return events
+        .where((e) => e.peak.isAfter(start) && e.peak.isBefore(end))
+        .toList();
+  }
 
-  /// TODO: Add method for filtering events by date range
-  /// List<EclipseEvent> filterByDateRange(List<EclipseEvent> events, DateTime start, DateTime end) { ... }
-
-  /// TODO: Add method for filtering events by visibility region
-  /// List<EclipseEvent> filterByRegion(List<EclipseEvent> events, String region) { ... }
+  /// Filter events by visibility region
+  List<EclipseEvent> filterByRegion(
+    List<EclipseEvent> events,
+    String region,
+  ) {
+    return events
+        .where((e) => e.visibility
+            .any((r) => r.toLowerCase().contains(region.toLowerCase())))
+        .toList();
+  }
 }
 
 /// Riverpod provider for EclipseService singleton

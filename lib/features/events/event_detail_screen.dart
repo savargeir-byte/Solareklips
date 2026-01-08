@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../controllers/eclipse_controller.dart';
-import '../models/eclipse_event.dart';
-import '../services/shadow_timing_service.dart';
-import '../widgets/corona_painter.dart';
-import '../widgets/eclipse_progress_simulation.dart';
-import 'eclipse_live_view.dart';
-import 'map_screen.dart';
+import 'package:eclipse_map/features/eclipse/eclipse_controller.dart';
+import 'package:eclipse_map/features/eclipse/eclipse_live_view.dart';
+import 'package:eclipse_map/features/map/map_screen.dart';
+import 'package:eclipse_map/core/models/eclipse_event.dart';
+import 'package:eclipse_map/core/services/location_providers.dart';
+import 'package:eclipse_map/core/services/shadow_timing_service.dart';
+import 'package:eclipse_map/ui/painters/corona_painter.dart';
+import 'package:eclipse_map/ui/widgets/eclipse_progress_simulation.dart';
 
 /// Screen showing detailed information about a specific eclipse event
-class EventDetailScreen extends StatefulWidget {
+class EventDetailScreen extends ConsumerStatefulWidget {
   final EclipseEvent event;
 
   const EventDetailScreen({required this.event, super.key});
 
   @override
-  State<EventDetailScreen> createState() => _EventDetailScreenState();
+  ConsumerState<EventDetailScreen> createState() => _EventDetailScreenState();
 }
 
-class _EventDetailScreenState extends State<EventDetailScreen>
+class _EventDetailScreenState extends ConsumerState<EventDetailScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _progressAnimation;
@@ -47,43 +49,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
-  }
-
-  Future<String> _calculateLocalTiming() async {
-    try {
-      // Simple mock location for demo - in production use geolocator
-      const userLat = 64.9631;
-      const userLon = -19.0208;
-
-      if (widget.event.centerlineCoords == null ||
-          widget.event.maxDurationSeconds == null) {
-        return 'Location data unavailable';
-      }
-
-      final centerlineLat = widget.event.centerlineCoords![0];
-      final centerlineLon = widget.event.centerlineCoords![1];
-
-      final localDuration = ShadowTimingService.calculateLocalTotality(
-        userLat: userLat,
-        userLon: userLon,
-        centerlineLat: centerlineLat,
-        centerlineLon: centerlineLon,
-        maxShadowWidthMeters: 200000, // ~200km typical umbra width
-        maxTotalitySeconds: widget.event.maxDurationSeconds!,
-      );
-
-      final distance = ShadowTimingService.haversineDistance(
-        userLat,
-        userLon,
-        centerlineLat,
-        centerlineLon,
-      );
-
-      return 'At your location (${distance.toStringAsFixed(0)}m from centerline):\n'
-          'Totality duration: ${ShadowTimingService.formatDuration(localDuration)}';
-    } catch (e) {
-      return 'Unable to calculate local timing';
-    }
   }
 
   @override
@@ -167,18 +132,18 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             const SizedBox(height: 12),
             _TimelineItem(
               label: 'Start',
-              time: dateFormat.format(widget.event.startUtc.toLocal()),
+              time: dateFormat.format(widget.event.start.toLocal()),
               icon: Icons.play_arrow,
             ),
             _TimelineItem(
               label: 'Peak (Maximum)',
-              time: dateFormat.format(widget.event.peakUtc.toLocal()),
+              time: dateFormat.format(widget.event.peak.toLocal()),
               icon: Icons.radio_button_checked,
               isHighlight: true,
             ),
             _TimelineItem(
               label: 'End',
-              time: dateFormat.format(widget.event.endUtc.toLocal()),
+              time: dateFormat.format(widget.event.end.toLocal()),
               icon: Icons.stop,
             ),
 
@@ -200,9 +165,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                     ),
                     const SizedBox(height: 12),
                     EclipseProgressSimulation(
-                      start: widget.event.startUtc,
-                      peak: widget.event.peakUtc,
-                      end: widget.event.endUtc,
+                      start: widget.event.start,
+                      peak: widget.event.peak,
+                      end: widget.event.end,
                       height: 200,
                     ),
                   ],
@@ -241,62 +206,10 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
             const SizedBox(height: 24),
 
-            // GPS Shadow Timing Section
+            // GPS-Based Location Timing Section
             if (widget.event.centerlineCoords != null &&
                 widget.event.maxDurationSeconds != null)
-              Card(
-                color: const Color(0xFF1A1A1A),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.gps_fixed, color: Color(0xFFE4B85F)),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Local Timing',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  color: const Color(0xFFE4B85F),
-                                ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      FutureBuilder<String>(
-                        future: _calculateLocalTiming(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(
-                              snapshot.data!,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            );
-                          }
-                          return const Text(
-                            'Calculating location...',
-                            style: TextStyle(color: Colors.white70),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Maximum duration at centerline: ${ShadowTimingService.formatDuration(widget.event.maxDurationSeconds!.toDouble())}',
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              _LocationTimingCard(event: widget.event),
 
             const SizedBox(height: 16),
 
@@ -306,7 +219,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: widget.event.visibilityRegions
+              children: widget.event.visibility
                   .map((region) => Chip(
                         label: Text(region),
                         avatar: const Icon(Icons.location_on, size: 16),
@@ -332,9 +245,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               child: ElevatedButton.icon(
                 onPressed: () {
                   final controller = EclipseController(
-                    start: widget.event.startUtc,
-                    peak: widget.event.peakUtc,
-                    end: widget.event.endUtc,
+                    start: widget.event.start,
+                    peak: widget.event.peak,
+                    end: widget.event.end,
                   );
 
                   Navigator.push(
@@ -455,5 +368,257 @@ class _TimelineItem extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Location-aware timing card showing GPS-calculated eclipse details
+class _LocationTimingCard extends ConsumerWidget {
+  final EclipseEvent event;
+
+  const _LocationTimingCard({required this.event});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final calculationAsync = ref.watch(eclipseCalculationProvider(event));
+    final permissionState = ref.watch(locationPermissionProvider);
+
+    return Card(
+      color: const Color(0xFF1A1A1A),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.gps_fixed, color: Color(0xFFE4B85F)),
+                const SizedBox(width: 8),
+                Text(
+                  'Your Location Timing',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: const Color(0xFFE4B85F),
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            calculationAsync.when(
+              data: (calculation) {
+                if (calculation.containsKey('error')) {
+                  return _buildPermissionPrompt(context, ref, permissionState);
+                }
+
+                final inPath = calculation['inPath'] as bool;
+                final totalityDuration =
+                    calculation['totalityDuration'] as double;
+                final distanceToCenterline =
+                    calculation['distanceToCenterline'] as double;
+                final contactTimes =
+                    calculation['contactTimes'] as Map<String, DateTime>;
+
+                if (!inPath) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '❌ Not in totality path',
+                        style: TextStyle(
+                          color: Colors.orange,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'You are ${_formatDistance(distanceToCenterline)} from the centerline.',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'You will experience a partial eclipse at your location.',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                    ],
+                  );
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          '✓ In totality path',
+                          style: TextStyle(
+                            color: Color(0xFFE4B85F),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoRow(
+                      'Totality Duration',
+                      ShadowTimingService.formatDuration(totalityDuration),
+                    ),
+                    _buildInfoRow(
+                      'Distance from Centerline',
+                      _formatDistance(distanceToCenterline),
+                    ),
+                    if (contactTimes.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Contact Times (Local):',
+                        style: TextStyle(
+                          color: Color(0xFFE4B85F),
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      if (contactTimes.containsKey('c1'))
+                        _buildContactTime(
+                            'C1 (First Contact)', contactTimes['c1']!),
+                      if (contactTimes.containsKey('c2'))
+                        _buildContactTime(
+                            'C2 (Second Contact)', contactTimes['c2']!),
+                      if (contactTimes.containsKey('c3'))
+                        _buildContactTime(
+                            'C3 (Third Contact)', contactTimes['c3']!),
+                      if (contactTimes.containsKey('c4'))
+                        _buildContactTime(
+                            'C4 (Fourth Contact)', contactTimes['c4']!),
+                    ],
+                  ],
+                );
+              },
+              loading: () => const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFFE4B85F)),
+                  ),
+                ),
+              ),
+              error: (error, stack) => Text(
+                'Error calculating location: $error',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPermissionPrompt(
+    BuildContext context,
+    WidgetRef ref,
+    LocationPermissionState state,
+  ) {
+    if (state == LocationPermissionState.denied) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Location permission required',
+            style: TextStyle(color: Colors.orange, fontSize: 14),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            onPressed: () {
+              ref.read(locationPermissionProvider.notifier).requestPermission();
+            },
+            icon: const Icon(Icons.location_on),
+            label: const Text('Grant Permission'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE4B85F),
+              foregroundColor: Colors.black,
+            ),
+          ),
+        ],
+      );
+    } else if (state == LocationPermissionState.deniedForever) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Location permission permanently denied',
+            style: TextStyle(color: Colors.orange, fontSize: 14),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            onPressed: () {
+              ref.read(locationPermissionProvider.notifier).openSettings();
+            },
+            icon: const Icon(Icons.settings),
+            label: const Text('Open Settings'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE4B85F),
+              foregroundColor: Colors.black,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return const Text(
+      'Enable location services to see personalized eclipse timing',
+      style: TextStyle(color: Colors.white70),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactTime(String label, DateTime time) {
+    final formatter = DateFormat('HH:mm:ss');
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white60, fontSize: 13),
+          ),
+          Text(
+            formatter.format(time.toLocal()),
+            style: const TextStyle(color: Colors.white, fontSize: 13),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDistance(double meters) {
+    if (meters < 1000) {
+      return '${meters.toStringAsFixed(0)} m';
+    } else {
+      final km = meters / 1000;
+      return '${km.toStringAsFixed(1)} km';
+    }
   }
 }

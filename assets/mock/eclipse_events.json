@@ -1,6 +1,7 @@
 [
   {
     "id": "iceland-2026-solar-total",
+    "title": "Iceland Total Solar Eclipse 2026",
     "type": "solar",
     "subtype": "total",
     "startUtc": "2026-04-12T14:30:00Z",
@@ -45,6 +46,7 @@
   },
   {
     "id": "global-2025-lunar-partial",
+    "title": "September 2025 Partial Lunar Eclipse",
     "type": "lunar",
     "subtype": "partial",
     "startUtc": "2025-09-07T22:00:00Z",
@@ -72,6 +74,7 @@
   },
   {
     "id": "spain-2027-solar-total",
+    "title": "Spain Total Solar Eclipse 2027",
     "type": "solar",
     "subtype": "total",
     "startUtc": "2027-08-02T09:00:00Z",

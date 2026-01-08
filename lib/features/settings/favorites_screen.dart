@@ -29,13 +29,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kDarkGray,
+        backgroundColor: AppColors.darkGray,
         title: const Text(
           'Favorite Locations',
           style: TextStyle(
-              color: kGold, fontSize: 20, fontWeight: FontWeight.w400),
+              color: AppColors.gold, fontSize: 20, fontWeight: FontWeight.w400),
         ),
-        iconTheme: const IconThemeData(color: kGold),
+        iconTheme: const IconThemeData(color: AppColors.gold),
       ),
       body: _favorites.isEmpty
           ? _buildEmptyState()
@@ -48,8 +48,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               },
             ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: kGold,
-        foregroundColor: kBlack,
+        backgroundColor: AppColors.gold,
+        foregroundColor: AppColors.black,
         onPressed: _showAddLocationDialog,
         child: const Icon(Icons.add_location),
       ),
@@ -64,13 +64,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           Icon(
             Icons.location_off,
             size: 64,
-            color: kGoldDim.withOpacity(0.5),
+            color: AppColors.goldDim.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
           Text(
             'No saved locations',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: kGoldDim,
+                  color: AppColors.goldDim,
                 ),
           ),
           const SizedBox(height: 8),
@@ -85,7 +85,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   Widget _buildLocationCard(ObservationLocation location, int index) {
     return Card(
-      color: kDarkGray,
+      color: AppColors.darkGray,
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -93,15 +93,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: kGold.withOpacity(0.1),
+            color: AppColors.gold.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Icon(Icons.location_on, color: kGold),
+          child: const Icon(Icons.location_on, color: AppColors.gold),
         ),
         title: Text(
           location.name,
           style: const TextStyle(
-            color: kGold,
+            color: AppColors.gold,
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
@@ -118,12 +118,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             Text(
               'Lat: ${location.latitude.toStringAsFixed(4)}°, '
               'Lon: ${location.longitude.toStringAsFixed(4)}°',
-              style: const TextStyle(color: kGoldDim, fontSize: 12),
+              style: const TextStyle(color: AppColors.goldDim, fontSize: 12),
             ),
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete_outline, color: kGoldDim),
+          icon: const Icon(Icons.delete_outline, color: AppColors.goldDim),
           onPressed: () => _removeLocation(index),
         ),
         onTap: () => _showLocationDetails(location),
@@ -140,8 +140,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: kDarkGray,
-        title: const Text('Add Location', style: TextStyle(color: kGold)),
+        backgroundColor: AppColors.darkGray,
+        title: const Text('Add Location', style: TextStyle(color: AppColors.gold)),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -151,12 +151,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Location Name',
-                  labelStyle: TextStyle(color: kGoldDim),
+                  labelStyle: TextStyle(color: AppColors.goldDim),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: kGoldDim),
+                    borderSide: BorderSide(color: AppColors.goldDim),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: kGold),
+                    borderSide: BorderSide(color: AppColors.gold),
                   ),
                 ),
               ),
@@ -166,12 +166,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Country',
-                  labelStyle: TextStyle(color: kGoldDim),
+                  labelStyle: TextStyle(color: AppColors.goldDim),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: kGoldDim),
+                    borderSide: BorderSide(color: AppColors.goldDim),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: kGold),
+                    borderSide: BorderSide(color: AppColors.gold),
                   ),
                 ),
               ),
@@ -184,13 +184,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 decoration: InputDecoration(
                   labelText: 'Latitude',
                   hintText: '64.1466',
-                  hintStyle: TextStyle(color: kGoldDim.withOpacity(0.3)),
-                  labelStyle: const TextStyle(color: kGoldDim),
+                  hintStyle: TextStyle(color: AppColors.goldDim.withOpacity(0.3)),
+                  labelStyle: const TextStyle(color: AppColors.goldDim),
                   enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: kGoldDim),
+                    borderSide: BorderSide(color: AppColors.goldDim),
                   ),
                   focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: kGold),
+                    borderSide: BorderSide(color: AppColors.gold),
                   ),
                 ),
               ),
@@ -203,13 +203,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 decoration: InputDecoration(
                   labelText: 'Longitude',
                   hintText: '-21.9426',
-                  hintStyle: TextStyle(color: kGoldDim.withOpacity(0.3)),
-                  labelStyle: const TextStyle(color: kGoldDim),
+                  hintStyle: TextStyle(color: AppColors.goldDim.withOpacity(0.3)),
+                  labelStyle: const TextStyle(color: AppColors.goldDim),
                   enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: kGoldDim),
+                    borderSide: BorderSide(color: AppColors.goldDim),
                   ),
                   focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: kGold),
+                    borderSide: BorderSide(color: AppColors.gold),
                   ),
                 ),
               ),
@@ -219,7 +219,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: kGoldDim)),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.goldDim)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -257,7 +257,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   void _showLocationDetails(ObservationLocation location) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: kDarkGray,
+      backgroundColor: AppColors.darkGray,
       builder: (context) => Container(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -266,7 +266,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           children: [
             Row(
               children: [
-                const Icon(Icons.location_on, color: kGold, size: 32),
+                const Icon(Icons.location_on, color: AppColors.gold, size: 32),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -275,7 +275,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       Text(
                         location.name,
                         style: const TextStyle(
-                          color: kGold,
+                          color: AppColors.gold,
                           fontSize: 24,
                           fontWeight: FontWeight.w500,
                         ),
@@ -302,7 +302,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             const Text(
               'Next Eclipse Visibility',
               style: TextStyle(
-                color: kGoldDim,
+                color: AppColors.goldDim,
                 fontSize: 14,
                 letterSpacing: 1,
               ),
@@ -311,13 +311,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: kBlack.withOpacity(0.3),
+                color: AppColors.black.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: kGold.withOpacity(0.2)),
+                border: Border.all(color: AppColors.gold.withOpacity(0.2)),
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.wb_sunny, color: kGold, size: 32),
+                  Icon(Icons.wb_sunny, color: AppColors.gold, size: 32),
                   SizedBox(width: 16),
                   Expanded(
                     child: Column(
@@ -326,7 +326,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         Text(
                           'Iceland 2026 Total',
                           style: TextStyle(
-                            color: kGold,
+                            color: AppColors.gold,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -335,7 +335,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         Text(
                           'April 12, 2026 • 15:00 UTC',
                           style: TextStyle(
-                            color: kGoldDim,
+                            color: AppColors.goldDim,
                             fontSize: 14,
                           ),
                         ),
@@ -366,7 +366,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         Text(
           value,
           style: const TextStyle(
-            color: kGold,
+            color: AppColors.gold,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),

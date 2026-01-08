@@ -139,7 +139,7 @@ class ShadowTimingService {
     required double userLat,
     required double userLon,
     required List<List<double>> centerlinePath,
-    required DateTime peakUtc,
+    required DateTime peak,
     required double maxShadowWidthMeters,
     required int maxTotalitySeconds,
   }) {
@@ -164,11 +164,11 @@ class ShadowTimingService {
     const partialPhaseDuration = 3600; // seconds
 
     return {
-      'c1': peakUtc.subtract(
+      'c1': peak.subtract(
           Duration(seconds: (partialPhaseDuration + halfTotality).round())),
-      'c2': peakUtc.subtract(Duration(seconds: halfTotality.round())),
-      'c3': peakUtc.add(Duration(seconds: halfTotality.round())),
-      'c4': peakUtc.add(
+      'c2': peak.subtract(Duration(seconds: halfTotality.round())),
+      'c3': peak.add(Duration(seconds: halfTotality.round())),
+      'c4': peak.add(
           Duration(seconds: (partialPhaseDuration + halfTotality).round())),
     };
   }
