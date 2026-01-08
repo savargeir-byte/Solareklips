@@ -49,8 +49,7 @@ class EclipseService {
     String region,
   ) {
     return events
-        .where((e) => e.visibility
-            .any((r) => r.toLowerCase().contains(region.toLowerCase())))
+        .where((e) => e.visibility.toLowerCase().contains(region.toLowerCase()))
         .toList();
   }
 }

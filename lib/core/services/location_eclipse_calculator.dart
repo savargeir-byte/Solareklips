@@ -71,7 +71,7 @@ class LocationEclipseCalculator {
       final inPath = distanceToCenterline <= (shadowWidthMeters / 2);
       results['inPath'] = inPath;
 
-      if (inPath && event.subtype == EclipseType.total) {
+      if (inPath && event.type == EclipseType.solar) {
         // Calculate local totality duration
         final totalityDuration = ShadowTimingService.calculateLocalTotality(
           userLat: userPosition.latitude,

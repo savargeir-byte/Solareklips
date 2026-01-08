@@ -91,9 +91,9 @@ class _EclipsePainter extends CustomPainter {
   final double pulse; // 0..1 (animation pulse)
 
   // Solar Eclipse Minimal colors
-  static const AppColors.black = Color(0xFF000000);
-  static const AppColors.gold = Color(0xFFE4B85F);
-  static const AppColors.goldDim = Color(0xFF8A7344);
+  static const _black = Color(0xFF000000);
+  static const _gold = Color(0xFFE4B85F);
+  static const _goldDim = Color(0xFF8A7344);
 
   _EclipsePainter({
     required this.progress,
@@ -110,14 +110,14 @@ class _EclipsePainter extends CustomPainter {
     // Background
     canvas.drawRect(
       Rect.fromLTWH(0, 0, size.width, size.height),
-      Paint()..color = AppColors.black,
+      Paint()..color = _black,
     );
 
     // Sun glow (pulsing slightly)
     final glowPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          AppColors.gold.withOpacity(0.15 + 0.10 * pulse),
+          _gold.withOpacity(0.15 + 0.10 * pulse),
           Colors.transparent,
         ],
         stops: const [0.0, 1.0],
@@ -126,7 +126,7 @@ class _EclipsePainter extends CustomPainter {
 
     // Sun core with soft blur
     final sunPaint = Paint()
-      ..color = AppColors.gold
+      ..color = _gold
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12.0);
     canvas.drawCircle(center, sunR, sunPaint);
 
@@ -149,7 +149,7 @@ class _EclipsePainter extends CustomPainter {
       final coronaPaint = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3.0
-        ..color = AppColors.gold.withOpacity(0.8 * coronaAlpha)
+        ..color = _gold.withOpacity(0.8 * coronaAlpha)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6.0);
       canvas.drawCircle(center, sunR + 8, coronaPaint);
     }
@@ -189,9 +189,9 @@ class _EclipsePainter extends CustomPainter {
       final fillPaint = Paint()
         ..shader = LinearGradient(
           colors: [
-            AppColors.goldDim,
-            AppColors.gold,
-            AppColors.gold.withOpacity(0.8),
+            _goldDim,
+            _gold,
+            _gold.withOpacity(0.8),
           ],
           stops: const [0.0, 0.6, 1.0],
         ).createShader(fillRect);
@@ -204,7 +204,7 @@ class _EclipsePainter extends CustomPainter {
     // Peak marker (gold dot)
     final peakX = barRect.left + barRect.width * peakProgress;
     final peakMarkerPaint = Paint()
-      ..color = AppColors.gold
+      ..color = _gold
       ..style = PaintingStyle.fill;
     canvas.drawCircle(
       Offset(peakX, barRect.top - 6),

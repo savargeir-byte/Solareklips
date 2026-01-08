@@ -57,7 +57,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event.title),
+        title: Text(widget.event.title ?? 'Eclipse Event'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -83,7 +83,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen>
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    widget.event.title,
+                    widget.event.title ?? 'Eclipse Event',
                     style: Theme.of(context).textTheme.headlineSmall,
                     textAlign: TextAlign.center,
                   ),
@@ -108,9 +108,13 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen>
                           ),
                     ),
                     const SizedBox(height: 16),
-                    const AnimatedCorona(
-                      size: 280,
-                      showChromosphere: true,
+                    Container(
+                      height: 280,
+                      alignment: Alignment.center,
+                      child: Text(
+                        '☀️',
+                        style: TextStyle(fontSize: 120),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -216,15 +220,9 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen>
             // Visibility regions
             const _SectionTitle(title: 'Visible From'),
             const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: widget.event.visibility
-                  .map((region) => Chip(
-                        label: Text(region),
-                        avatar: const Icon(Icons.location_on, size: 16),
-                      ))
-                  .toList(),
+            Chip(
+              label: Text(widget.event.visibility),
+              avatar: const Icon(Icons.location_on, size: 16),
             ),
 
             const SizedBox(height: 24),
@@ -233,7 +231,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen>
             const _SectionTitle(title: 'Description'),
             const SizedBox(height: 8),
             Text(
-              widget.event.description,
+              widget.event.description ?? 'No description available',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
 
@@ -259,7 +257,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen>
                           widget.event.centerlineCoords?.first ?? 65.0,
                           widget.event.centerlineCoords?.last ?? -18.0,
                         ),
-                        eventName: widget.event.title,
+                        eventName: widget.event.title ?? widget.event.id,
                       ),
                     ),
                   );

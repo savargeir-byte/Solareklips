@@ -184,7 +184,7 @@ class EventListItem extends StatelessWidget {
           ),
         ),
         title: Text(
-          event.title,
+          event.title ?? event.id,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Column(
@@ -194,7 +194,7 @@ class EventListItem extends StatelessWidget {
             Text(event.dateDisplay),
             const SizedBox(height: 2),
             Text(
-              event.visibility.take(2).join(', '),
+              event.visibility,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
