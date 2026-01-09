@@ -116,429 +116,483 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_currentMode.displayName),
-        actions: [
-          PopupMenuButton<CameraMode>(
-            icon: const Icon(Icons.camera_alt_outlined),
-            tooltip: 'Switch Camera Mode',
-            onSelected: (mode) {
-              // Check if mode requires PRO
-              if (mode.isPro) {
-                PaywallSheet.show(
-                  context: context,
-                  featureName: mode.displayName,
-                  onUnlock: () {
-                    setState(() {
-                      _currentMode = mode;
-                    });
-                  },
-                );
-              } else {
-                setState(() {
-                  _currentMode = mode;
-                });
-              }
-            },
-            itemBuilder: (context) => CameraMode.values
-                .map(
-                  (mode) => PopupMenuItem(
-                    value: mode,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              mode == _currentMode
-                                  ? Icons.check_circle
-                                  : Icons.circle_outlined,
-                              size: 20,
-                              color: mode == _currentMode
-                                  ? const Color(0xFFE4B85F)
-                                  : Colors.grey,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              mode.displayName,
-                              style: TextStyle(
-                                fontWeight: mode == _currentMode
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                              ),
-                            ),
-                            if (mode.isPro) ...[
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFE4B85F),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: const Text(
-                                  'PRO',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 28),
-                          child: Text(
-                            mode.description,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                        ),
-                      ],
+    return DraggableScrollableSheet(
+      initialChildSize: 0.95,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              // Custom app bar
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.grey.shade800,
+                      width: 1,
                     ),
                   ),
-                )
-                .toList(),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Mode indicator card
-            Card(
-              color: const Color(0xFFE4B85F).withOpacity(0.1),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+                ),
                 child: Row(
                   children: [
-                    Icon(
-                      _currentMode == CameraMode.skyView
-                          ? Icons.wb_twilight
-                          : _currentMode == CameraMode.eclipse
-                              ? Icons.wb_sunny
-                              : Icons.science,
-                      color: const Color(0xFFE4B85F),
-                      size: 32,
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    const SizedBox(width: 16),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _currentMode.displayName,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            _currentMode.description,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Practice Mode Countdown
-            if (_currentMode == CameraMode.practice)
-              const PracticeModeCountdown(),
-
-            if (_currentMode == CameraMode.practice) const SizedBox(height: 24),
-
-            // Header
-            const Text(
-              '📸 Camera Settings Guide',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _currentMode == CameraMode.skyView
-                  ? 'General astronomy photography settings'
-                  : _currentMode == CameraMode.eclipse
-                      ? 'Recommended settings for each eclipse phase'
-                      : 'Practice with simulated eclipse phases',
-              style: const TextStyle(color: Colors.grey),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Interval Timer
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      '⏱️ Interval Timer',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (_isRunning) ...[
-                      Center(
-                        child: Column(
-                          children: [
-                            Text(
-                              '$_shotsRemaining',
-                              style: const TextStyle(
-                                fontSize: 72,
-                                fontWeight: FontWeight.w300,
-                                color: Color(0xFFE4B85F),
-                              ),
-                            ),
-                            const Text(
-                              'shots remaining',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton.icon(
-                              onPressed: _stopTimer,
-                              icon: const Icon(Icons.stop),
-                              label: const Text('Stop'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ] else ...[
-                      const Text('Quick Bracket Modes:'),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          _IntervalButton(
-                            label: 'Baily\'s Beads\n15 shots / 0.5s',
-                            onPressed: () => _startIntervalTimer(
-                              shots: 15,
-                              interval: const Duration(milliseconds: 500),
-                            ),
-                          ),
-                          _IntervalButton(
-                            label: 'Corona HDR\n7 shots / 1s',
-                            onPressed: () => _startIntervalTimer(
-                              shots: 7,
-                              interval: const Duration(seconds: 1),
-                            ),
-                          ),
-                          _IntervalButton(
-                            label: 'Diamond Ring\n5 shots / 0.3s',
-                            onPressed: () => _startIntervalTimer(
-                              shots: 5,
-                              interval: const Duration(milliseconds: 300),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Manual Camera Controls (Platform-aware)
-            if (_currentMode != CameraMode.skyView)
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '🎛️ Manual Camera Controls',
-                        style: TextStyle(
+                      child: Text(
+                        _currentMode.displayName,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Text(
-                        Theme.of(context).platform == TargetPlatform.iOS
-                            ? 'iOS Guided Mode - Optimized presets for each phase'
-                            : 'Android Manual Mode - Full control over exposure',
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 13,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Platform-specific controls
-                      if (Theme.of(context).platform == TargetPlatform.iOS) ...[
-                        // iOS: Presets + Exposure bias
-                        _ManualControlRow(
-                          label: 'Preset',
-                          value: 'Totality',
-                          icon: Icons.image_outlined,
-                          onTap: () {
-                            _showPresetPicker(context);
-                          },
-                        ),
-                        const Divider(height: 24),
-                        _ManualControlRow(
-                          label: 'Exposure Bias',
-                          value: '+0.7 EV',
-                          icon: Icons.exposure,
-                          onTap: () {
-                            _showExposureBiasPicker(context);
-                          },
-                        ),
-                        const Divider(height: 24),
-                        _ManualControlRow(
-                          label: 'Focus Lock',
-                          value: 'Infinity',
-                          icon: Icons.filter_center_focus,
-                          onTap: () {
-                            _showFocusLockOptions(context);
-                          },
-                        ),
-                      ] else ...[
-                        // Android: Manual ISO + Shutter
-                        _ManualControlRow(
-                          label: 'ISO',
-                          value: '400',
-                          icon: Icons.iso,
-                          onTap: () {
-                            _showISOPicker(context);
-                          },
-                        ),
-                        const Divider(height: 24),
-                        _ManualControlRow(
-                          label: 'Shutter Speed',
-                          value: '1/250',
-                          icon: Icons.shutter_speed,
-                          onTap: () {
-                            _showShutterSpeedPicker(context);
-                          },
-                        ),
-                        const Divider(height: 24),
-                        _ManualControlRow(
-                          label: 'Aperture',
-                          value: 'f/4.0',
-                          icon: Icons.camera,
-                          onTap: () {
-                            _showAperturePicker(context);
-                          },
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-
-            const SizedBox(height: 24),
-
-            // Settings by phase
-            const Text(
-              '⚙️ Settings by Phase',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            ..._phaseSettings.entries.map((entry) {
-              return _SettingsCard(
-                phase: entry.key,
-                settings: entry.value,
-              );
-            }).toList(),
-
-            const SizedBox(height: 24),
-
-            // Quick tips
-            Card(
-              color: Colors.amber[50],
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '💡 Pro Tips',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
                     ),
-                    SizedBox(height: 12),
-                    _TipItem('Use manual focus set to infinity'),
-                    _TipItem('Shoot in RAW format for post-processing'),
-                    _TipItem('Use mirror lock-up or electronic shutter'),
-                    _TipItem('Bracket exposures during totality'),
-                    _TipItem('Remove solar filter 2s before totality'),
-                    _TipItem('Put filter back immediately after C3'),
+                    PopupMenuButton<CameraMode>(
+                      icon: const Icon(Icons.camera_alt_outlined),
+                      tooltip: 'Switch Camera Mode',
+                      onSelected: (mode) {
+                        // Check if mode requires PRO
+                        if (mode.isPro) {
+                          PaywallSheet.show(
+                            context: context,
+                            featureName: mode.displayName,
+                            onUnlock: () {
+                              setState(() {
+                                _currentMode = mode;
+                              });
+                            },
+                          );
+                        } else {
+                          setState(() {
+                            _currentMode = mode;
+                          });
+                        }
+                      },
+                      itemBuilder: (context) => CameraMode.values
+                          .map(
+                            (mode) => PopupMenuItem(
+                              value: mode,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        mode == _currentMode
+                                            ? Icons.check_circle
+                                            : Icons.circle_outlined,
+                                        size: 20,
+                                        color: mode == _currentMode
+                                            ? const Color(0xFFE4B85F)
+                                            : Colors.grey,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Flexible(
+                                        child: Text(
+                                          mode.displayName,
+                                          style: TextStyle(
+                                            fontWeight: mode == _currentMode
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                      if (mode.isPro) ...[
+                                        const SizedBox(width: 8),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 6,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE4B85F),
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          child: const Text(
+                                            'PRO',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 28),
+                                    child: Text(
+                                      mode.description,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ],
                 ),
               ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Equipment checklist
-            const Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              
+              // Scrollable content
+              Expanded(
+                child: ListView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(16),
                   children: [
+                    // Mode indicator card
+                    Card(
+                      color: const Color(0xFFE4B85F).withOpacity(0.1),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            Icon(
+                              _currentMode == CameraMode.skyView
+                                  ? Icons.wb_twilight
+                                  : _currentMode == CameraMode.eclipse
+                                      ? Icons.wb_sunny
+                                      : Icons.science,
+                              color: const Color(0xFFE4B85F),
+                              size: 28,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _currentMode.displayName,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    _currentMode.description,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Practice Mode Countdown
+                    if (_currentMode == CameraMode.practice)
+                      const PracticeModeCountdown(),
+
+                    if (_currentMode == CameraMode.practice) const SizedBox(height: 20),
+
+                    // Header
+                    const Text(
+                      '📸 Camera Settings',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
                     Text(
-                      '📋 Equipment Checklist',
+                      _currentMode == CameraMode.skyView
+                          ? 'General astronomy photography'
+                          : _currentMode == CameraMode.eclipse
+                              ? 'Eclipse phase recommendations'
+                              : 'Practice mode settings',
+                      style: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 13,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Interval Timer
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              '⏱️ Interval Timer',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            if (_isRunning) ...[
+                              Center(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '$_shotsRemaining',
+                                      style: const TextStyle(
+                                        fontSize: 56,
+                                        fontWeight: FontWeight.w300,
+                                        color: Color(0xFFE4B85F),
+                                      ),
+                                    ),
+                                    const Text(
+                                      'shots remaining',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 14),
+                                    ElevatedButton.icon(
+                                      onPressed: _stopTimer,
+                                      icon: const Icon(Icons.stop),
+                                      label: const Text('Stop'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ] else ...[
+                              const Text(
+                                'Quick Bracket Modes:',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              const SizedBox(height: 10),
+                              Wrap(
+                                spacing: 6,
+                                runSpacing: 6,
+                                children: [
+                                  _IntervalButton(
+                                    label: 'Baily\'s Beads\n15 shots / 0.5s',
+                                    onPressed: () => _startIntervalTimer(
+                                      shots: 15,
+                                      interval: const Duration(milliseconds: 500),
+                                    ),
+                                  ),
+                                  _IntervalButton(
+                                    label: 'Corona HDR\n7 shots / 1s',
+                                    onPressed: () => _startIntervalTimer(
+                                      shots: 7,
+                                      interval: const Duration(seconds: 1),
+                                    ),
+                                  ),
+                                  _IntervalButton(
+                                    label: 'Diamond Ring\n5 shots / 0.3s',
+                                    onPressed: () => _startIntervalTimer(
+                                      shots: 5,
+                                      interval: const Duration(milliseconds: 300),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Manual Camera Controls (Platform-aware)
+                    if (_currentMode != CameraMode.skyView)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                '🎛️ Manual Controls',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                Theme.of(context).platform == TargetPlatform.iOS
+                                    ? 'iOS Guided Mode'
+                                    : 'Android Manual Mode',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+
+                              // Platform-specific controls
+                              if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+                                // iOS: Presets + Exposure bias
+                                _ManualControlRow(
+                                  label: 'Preset',
+                                  value: 'Totality',
+                                  icon: Icons.image_outlined,
+                                  onTap: () {
+                                    _showPresetPicker(context);
+                                  },
+                                ),
+                                const Divider(height: 20),
+                                _ManualControlRow(
+                                  label: 'Exposure Bias',
+                                  value: '+0.7 EV',
+                                  icon: Icons.exposure,
+                                  onTap: () {
+                                    _showExposureBiasPicker(context);
+                                  },
+                                ),
+                                const Divider(height: 20),
+                                _ManualControlRow(
+                                  label: 'Focus Lock',
+                                  value: 'Infinity',
+                                  icon: Icons.filter_center_focus,
+                                  onTap: () {
+                                    _showFocusLockOptions(context);
+                                  },
+                                ),
+                              ] else ...[
+                                // Android: Manual ISO + Shutter
+                                _ManualControlRow(
+                                  label: 'ISO',
+                                  value: '400',
+                                  icon: Icons.iso,
+                                  onTap: () {
+                                    _showISOPicker(context);
+                                  },
+                                ),
+                                const Divider(height: 20),
+                                _ManualControlRow(
+                                  label: 'Shutter Speed',
+                                  value: '1/250',
+                                  icon: Icons.shutter_speed,
+                                  onTap: () {
+                                    _showShutterSpeedPicker(context);
+                                  },
+                                ),
+                                const Divider(height: 20),
+                                _ManualControlRow(
+                                  label: 'Aperture',
+                                  value: 'f/4.0',
+                                  icon: Icons.camera,
+                                  onTap: () {
+                                    _showAperturePicker(context);
+                                  },
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+
+                    const SizedBox(height: 20),
+
+                    // Settings by phase
+                    const Text(
+                      '⚙️ Settings by Phase',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 12),
-                    _ChecklistItem('Camera with manual controls'),
-                    _ChecklistItem('Telephoto lens (400mm+ recommended)'),
-                    _ChecklistItem('Sturdy tripod'),
-                    _ChecklistItem('Solar filter (Baader film or glass)'),
-                    _ChecklistItem('Intervalometer or remote shutter'),
-                    _ChecklistItem('Extra batteries (cold drains them fast)'),
-                    _ChecklistItem('Memory cards (32GB+ recommended)'),
+                    const SizedBox(height: 10),
+
+                    ..._phaseSettings.entries.map((entry) {
+                      return _SettingsCard(
+                        phase: entry.key,
+                        settings: entry.value,
+                      );
+                    }).toList(),
+
+                    const SizedBox(height: 20),
+
+                    // Quick tips
+                    Card(
+                      color: Colors.amber[50],
+                      child: const Padding(
+                        padding: EdgeInsets.all(14),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '💡 Pro Tips',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            _TipItem('Manual focus at infinity'),
+                            _TipItem('Shoot in RAW format'),
+                            _TipItem('Use mirror lock-up'),
+                            _TipItem('Bracket exposures'),
+                            _TipItem('Remove filter before totality'),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Equipment checklist
+                    const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(14),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '📋 Checklist',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            _ChecklistItem('Camera + manual controls'),
+                            _ChecklistItem('Telephoto lens (400mm+)'),
+                            _ChecklistItem('Sturdy tripod'),
+                            _ChecklistItem('Solar filter'),
+                            _ChecklistItem('Remote shutter'),
+                            _ChecklistItem('Extra batteries'),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 

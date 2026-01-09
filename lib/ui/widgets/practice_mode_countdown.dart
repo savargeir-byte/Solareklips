@@ -162,7 +162,7 @@ class _PracticeModeCountdownState extends State<PracticeModeCountdown> {
     return Card(
       color: const Color(0xFFE4B85F).withOpacity(0.1),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             // Title
@@ -171,14 +171,14 @@ class _PracticeModeCountdownState extends State<PracticeModeCountdown> {
                 const Icon(
                   Icons.science,
                   color: Color(0xFFE4B85F),
-                  size: 28,
+                  size: 24,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 const Expanded(
                   child: Text(
                     'Practice Mode',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -235,16 +235,16 @@ class _PracticeModeCountdownState extends State<PracticeModeCountdown> {
                   Text(
                     'Current Phase',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 11,
                       color: Colors.grey.shade400,
-                      letterSpacing: 1.2,
+                      letterSpacing: 1.1,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     _currentPhase.displayName,
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: _currentPhase.color,
                     ),
@@ -263,16 +263,16 @@ class _PracticeModeCountdownState extends State<PracticeModeCountdown> {
                   value: minutes,
                   label: 'MIN',
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 const Text(
                   ':',
                   style: TextStyle(
-                    fontSize: 48,
+                    fontSize: 40,
                     fontWeight: FontWeight.w300,
                     color: Color(0xFFE4B85F),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 _TimeUnit(
                   value: seconds,
                   label: 'SEC',
@@ -387,7 +387,7 @@ class _TimeUnit extends StatelessWidget {
         Text(
           value.toString().padLeft(2, '0'),
           style: const TextStyle(
-            fontSize: 56,
+            fontSize: 48,
             fontWeight: FontWeight.w300,
             color: Color(0xFFE4B85F),
             height: 1,
@@ -397,9 +397,9 @@ class _TimeUnit extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: 13,
+            fontSize: 12,
             color: Colors.grey.shade500,
-            letterSpacing: 1.5,
+            letterSpacing: 1.2,
           ),
         ),
       ],
