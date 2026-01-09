@@ -25,6 +25,7 @@ After copying to Privacy-Policy repo, use these URLs:
 ## Key Features
 
 ### Privacy Policy Covers:
+
 - ✅ GPS location data collection
 - ✅ Motion sensor data (accelerometer/gyroscope)
 - ✅ Google AdMob advertising
@@ -35,6 +36,7 @@ After copying to Privacy-Policy repo, use these URLs:
 - ✅ Third-party services (AdMob, OpenStreetMap)
 
 ### Terms of Use Covers:
+
 - ✅ License grant and restrictions
 - ✅ **CRITICAL eye safety warnings** (ISO 12312-2 glasses required)
 - ✅ Accuracy disclaimers

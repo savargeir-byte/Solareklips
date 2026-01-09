@@ -1,16 +1,15 @@
+import 'package:eclipse_map/core/models/eclipse_event.dart';
+import 'package:eclipse_map/core/services/location_providers.dart';
+import 'package:eclipse_map/core/services/shadow_timing_service.dart';
+import 'package:eclipse_map/features/eclipse/eclipse_controller.dart';
+import 'package:eclipse_map/features/eclipse/eclipse_live_view.dart';
+import 'package:eclipse_map/features/map/map_screen.dart';
+import 'package:eclipse_map/ui/painters/corona_painter.dart';
+import 'package:eclipse_map/ui/widgets/eclipse_progress_simulation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
-
-import 'package:eclipse_map/features/eclipse/eclipse_controller.dart';
-import 'package:eclipse_map/features/eclipse/eclipse_live_view.dart';
-import 'package:eclipse_map/features/map/map_screen.dart';
-import 'package:eclipse_map/core/models/eclipse_event.dart';
-import 'package:eclipse_map/core/services/location_providers.dart';
-import 'package:eclipse_map/core/services/shadow_timing_service.dart';
-import 'package:eclipse_map/ui/painters/corona_painter.dart';
-import 'package:eclipse_map/ui/widgets/eclipse_progress_simulation.dart';
 
 /// Screen showing detailed information about a specific eclipse event
 class EventDetailScreen extends ConsumerStatefulWidget {
@@ -111,7 +110,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen>
                     Container(
                       height: 280,
                       alignment: Alignment.center,
-                      child: Text(
+                      child: const Text(
                         '☀️',
                         style: TextStyle(fontSize: 120),
                       ),
@@ -443,9 +442,9 @@ class _LocationTimingCard extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
-                        const Text(
+                        Text(
                           '✓ In totality path',
                           style: TextStyle(
                             color: Color(0xFFE4B85F),

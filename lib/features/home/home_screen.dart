@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-
 import 'package:eclipse_map/core/constants.dart';
+import 'package:eclipse_map/core/models/camera_mode.dart';
 import 'package:eclipse_map/core/models/eclipse_event.dart';
 import 'package:eclipse_map/core/services/admob_service.dart';
 import 'package:eclipse_map/features/events/event_detail_screen.dart';
@@ -11,6 +8,10 @@ import 'package:eclipse_map/features/map/map_screen.dart';
 import 'package:eclipse_map/ui/theme/theme_service.dart';
 import 'package:eclipse_map/ui/widgets/eclipse_progress_simulation.dart';
 import 'package:eclipse_map/ui/widgets/photography_assistant.dart';
+import 'package:eclipse_map/ui/widgets/timeline_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -55,192 +56,335 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(
-              ref.watch(themeModeProvider) == ThemeMode.dark
-                  ? Icons.light_mode
-                  : Icons.dark_mode,
-              color: AppColors.gold,
-            ),
-            onPressed: () {
-              ref.read(themeModeProvider.notifier).toggle();
-            },
-            tooltip: 'Toggle Theme',
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: AppColors.gold),
-            onPressed: () {
-              _showSettingsSheet(context);
-            },
-            tooltip: 'Settings',
-          ),
-        ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment.topCenter,
-            radius: 1.2,
-            colors: [
-              AppColors.darkGray.withOpacity(0.3),
-              AppColors.black,
-              AppColors.black,
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: Icon(
+                  ref.watch(themeModeProvider) == ThemeMode.dark
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                  color: AppColors.gold,
+                ),
+                onPressed: () {
+                  ref.read(themeModeProvider.notifier).toggle();
+                },
+                tooltip: 'Toggle Theme',
+              ),
+              IconButton(
+                icon: const Icon(Icons.more_vert, color: AppColors.gold),
+                onPressed: () {
+                  _showSettingsSheet(context);
+                },
+                tooltip: 'Settings',
+              ),
             ],
-            stops: const [0.0, 0.3, 1.0],
           ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
-              child: Column(
-                children: [
-                  // Live Eclipse Progress Simulation
-                  SizedBox(
-                    height: 240,
-                    child: EclipseProgressSimulation(
-                      start: DateTime(2026, 4, 12, 14, 30),
-                      peak: DateTime(2026, 4, 12, 15, 0),
-                      end: DateTime(2026, 4, 12, 15, 30),
-                      height: 240,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Event title
-                  Text(
-                    'Iceland 2026',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Total Solar Eclipse',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // Countdown (tappable)
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => EventDetailScreen(
-                            event: EclipseEvent(
-                              id: 'iceland-2026',
-                              type: EclipseType.solar,
-                              start: DateTime(2026, 4, 12, 14, 30).toUtc(),
-                              peak: DateTime(2026, 4, 12, 15, 0).toUtc(),
-                              end: DateTime(2026, 4, 12, 15, 30).toUtc(),
-                              geoJsonPath: '',
-                              visibility: 'Iceland',
-                              description:
-                                  'Total Solar Eclipse visible from Iceland',
-                              magnitude: 1.00,
-                              maxDurationSeconds: 180,
-                              centerlineCoords: [64.9631, -19.0208],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    child: const CountdownWidget(),
-                  ),
-
-                  const SizedBox(height: 48),
-
-                  // Icon grid
-                  const IconGrid(),
-
-                  const SizedBox(height: 40),
-
-                  // Time Travel Mode button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EventDetailScreen(
-                              event: EclipseEvent(
-                                id: 'iceland-2026',
-                                type: EclipseType.solar,
-                                start: DateTime(2026, 4, 12, 14, 30),
-                                peak: DateTime(2026, 4, 12, 15, 0),
-                                end: DateTime(2026, 4, 12, 15, 30),
-                                geoJsonPath: 'iceland_2026',
-                                visibility: 'Iceland',
-                                description: 'Total Solar Eclipse over Iceland',
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.topCenter,
+                radius: 1.2,
+                colors: [
+                  AppColors.darkGray.withOpacity(0.3),
+                  AppColors.black,
+                  AppColors.black,
+                ],
+                stops: const [0.0, 0.3, 1.0],
+              ),
+            ),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+                  child: Column(
+                    children: [
+                      // Enhanced Hero Card - Next Big Event
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => EventDetailScreen(
+                                event: EclipseEvent(
+                                  id: 'iceland-2026',
+                                  type: EclipseType.solar,
+                                  start: DateTime(2026, 4, 12, 14, 30).toUtc(),
+                                  peak: DateTime(2026, 4, 12, 15, 0).toUtc(),
+                                  end: DateTime(2026, 4, 12, 15, 30).toUtc(),
+                                  geoJsonPath: '',
+                                  visibility: 'Iceland',
+                                  description:
+                                      'Total Solar Eclipse visible from Iceland',
+                                  magnitude: 1.00,
+                                  maxDurationSeconds: 180,
+                                  centerlineCoords: [64.9631, -19.0208],
+                                ),
                               ),
                             ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                const Color(0xFFE4B85F).withOpacity(0.2),
+                                Colors.transparent,
+                                const Color(0xFFE4B85F).withOpacity(0.1),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: const Color(0xFFE4B85F).withOpacity(0.5),
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFE4B85F).withOpacity(0.3),
+                                blurRadius: 20,
+                                spreadRadius: 2,
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                      icon: const Icon(Icons.explore),
-                      label: const Text(
-                        'Event Details',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            children: [
+                              // Badge
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE4B85F),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  'NEXT BIG EVENT',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              // Eclipse visualization
+                              SizedBox(
+                                height: 200,
+                                child: EclipseProgressSimulation(
+                                  start: DateTime(2026, 4, 12, 14, 30),
+                                  peak: DateTime(2026, 4, 12, 15, 0),
+                                  end: DateTime(2026, 4, 12, 15, 30),
+                                  height: 200,
+                                ),
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              // Title
+                              const Text(
+                                'Iceland 2026',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+
+                              const SizedBox(height: 8),
+
+                              // Subtitle
+                              const Text(
+                                'Total Solar Eclipse',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color(0xFFE4B85F),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // Emotional message
+                              Text(
+                                'Don\'t miss this once-in-a-lifetime event!',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.grey.shade300,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+
+                              const SizedBox(height: 24),
+
+                              // Large countdown
+                              const CountdownWidget(isHeroCard: true),
+
+                              const SizedBox(height: 24),
+
+                              // CTA Button
+                              SizedBox(
+                                width: double.infinity,
+                                height: 56,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => EventDetailScreen(
+                                          event: EclipseEvent(
+                                            id: 'iceland-2026',
+                                            type: EclipseType.solar,
+                                            start: DateTime(2026, 4, 12, 14, 30)
+                                                .toUtc(),
+                                            peak: DateTime(2026, 4, 12, 15, 0)
+                                                .toUtc(),
+                                            end: DateTime(2026, 4, 12, 15, 30)
+                                                .toUtc(),
+                                            geoJsonPath: '',
+                                            visibility: 'Iceland',
+                                            description:
+                                                'Total Solar Eclipse visible from Iceland',
+                                            magnitude: 1.00,
+                                            maxDurationSeconds: 180,
+                                            centerlineCoords: [
+                                              64.9631,
+                                              -19.0208
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFE4B85F),
+                                    foregroundColor: Colors.black,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    elevation: 4,
+                                  ),
+                                  icon: const Icon(Icons.arrow_forward_rounded,
+                                      size: 24),
+                                  label: const Text(
+                                    'View Full Details',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 16),
+                      const SizedBox(height: 48),
 
-                  // Full path button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EventListScreen(initialTab: 0),
+                      // Icon grid
+                      const IconGrid(),
+
+                      const SizedBox(height: 40),
+
+                      // Timeline - Next 5 Years
+                      const EclipseTimeline(),
+
+                      const SizedBox(height: 40),
+
+                      // Time Travel Mode button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EventDetailScreen(
+                                  event: EclipseEvent(
+                                    id: 'iceland-2026',
+                                    type: EclipseType.solar,
+                                    start: DateTime(2026, 4, 12, 14, 30),
+                                    peak: DateTime(2026, 4, 12, 15, 0),
+                                    end: DateTime(2026, 4, 12, 15, 30),
+                                    geoJsonPath: 'iceland_2026',
+                                    visibility: 'Iceland',
+                                    description:
+                                        'Total Solar Eclipse over Iceland',
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.explore),
+                          label: const Text(
+                            'Event Details',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.5,
+                            ),
                           ),
-                        );
-                      },
-                      child: const Text(
-                        'See Full Path →',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
                         ),
                       ),
-                    ),
-                  ),
 
-                  // AdMob Banner
-                  if (_isBannerLoaded && _bannerAd != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: SizedBox(
-                        height: 50,
-                        child: AdWidget(ad: _bannerAd!),
+                      const SizedBox(height: 16),
+
+                      // Full path button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const EventListScreen(initialTab: 0),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'See Full Path →',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                ],
+
+                      // AdMob Banner
+                      if (_isBannerLoaded && _bannerAd != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: SizedBox(
+                            height: 50,
+                            child: AdWidget(ad: _bannerAd!),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
-    );
+        );
       },
     );
   }
@@ -305,7 +449,9 @@ class EclipsePainter extends CustomPainter {
 
 // Countdown widget
 class CountdownWidget extends StatefulWidget {
-  const CountdownWidget({super.key});
+  final bool isHeroCard;
+
+  const CountdownWidget({super.key, this.isHeroCard = false});
 
   @override
   State<CountdownWidget> createState() => _CountdownWidgetState();
@@ -314,7 +460,7 @@ class CountdownWidget extends StatefulWidget {
 class _CountdownWidgetState extends State<CountdownWidget> {
   late DateTime targetDate;
   late Duration difference;
-  
+
   @override
   void initState() {
     super.initState();
@@ -346,26 +492,46 @@ class _CountdownWidgetState extends State<CountdownWidget> {
     final minutes = difference.inMinutes % 60;
     final seconds = difference.inSeconds % 60;
 
+    final fontSize = widget.isHeroCard ? 56.0 : 48.0;
+    final labelFontSize = widget.isHeroCard ? 14.0 : 12.0;
+
     return Column(
       children: [
-        Text(
-          'Countdown',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                letterSpacing: 2,
-                color: AppColors.goldDim,
-              ),
-        ),
-        const SizedBox(height: 16),
+        if (!widget.isHeroCard)
+          Text(
+            'Countdown',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  letterSpacing: 2,
+                  color: AppColors.goldDim,
+                ),
+          ),
+        if (!widget.isHeroCard) const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _CountdownUnit(value: days, label: 'DAYS'),
+            _CountdownUnit(
+                value: days,
+                label: 'DAYS',
+                fontSize: fontSize,
+                labelFontSize: labelFontSize),
             const SizedBox(width: 24),
-            _CountdownUnit(value: hours, label: 'HRS'),
+            _CountdownUnit(
+                value: hours,
+                label: 'HRS',
+                fontSize: fontSize,
+                labelFontSize: labelFontSize),
             const SizedBox(width: 24),
-            _CountdownUnit(value: minutes, label: 'MIN'),
+            _CountdownUnit(
+                value: minutes,
+                label: 'MIN',
+                fontSize: fontSize,
+                labelFontSize: labelFontSize),
             const SizedBox(width: 24),
-            _CountdownUnit(value: seconds, label: 'SEC'),
+            _CountdownUnit(
+                value: seconds,
+                label: 'SEC',
+                fontSize: fontSize,
+                labelFontSize: labelFontSize),
           ],
         ),
       ],
@@ -376,8 +542,15 @@ class _CountdownWidgetState extends State<CountdownWidget> {
 class _CountdownUnit extends StatelessWidget {
   final int value;
   final String label;
+  final double fontSize;
+  final double labelFontSize;
 
-  const _CountdownUnit({required this.value, required this.label});
+  const _CountdownUnit({
+    required this.value,
+    required this.label,
+    this.fontSize = 48.0,
+    this.labelFontSize = 12.0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -385,9 +558,9 @@ class _CountdownUnit extends StatelessWidget {
       children: [
         Text(
           value.toString().padLeft(2, '0'),
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.gold,
-            fontSize: 48,
+            fontSize: fontSize,
             fontWeight: FontWeight.w300,
             height: 1,
           ),
@@ -395,9 +568,9 @@ class _CountdownUnit extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.goldDim,
-            fontSize: 12,
+            fontSize: labelFontSize,
             letterSpacing: 1.5,
           ),
         ),
@@ -470,17 +643,8 @@ class IconGrid extends StatelessWidget {
               context: context,
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
-              builder: (context) => PhotographyAssistant(
-                event: EclipseEvent(
-                  id: 'iceland-2026',
-                  type: EclipseType.solar,
-                  start: DateTime(2026, 4, 12, 14, 30),
-                  peak: DateTime(2026, 4, 12, 15, 0),
-                  end: DateTime(2026, 4, 12, 15, 30),
-                  geoJsonPath: 'iceland_2026',
-                  visibility: 'Iceland',
-                  description: 'Total Solar Eclipse',
-                ),
+              builder: (context) => const PhotographyAssistant(
+                initialMode: CameraMode.skyView,
               ),
             );
           },
@@ -515,7 +679,8 @@ class _IconButton extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 1),
+                border: Border.all(
+                    color: AppColors.gold.withOpacity(0.3), width: 1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -567,7 +732,8 @@ void _showSettingsSheet(BuildContext context) {
           ),
           const SizedBox(height: 24),
           ListTile(
-            leading: const Icon(Icons.notifications_outlined, color: AppColors.gold),
+            leading:
+                const Icon(Icons.notifications_outlined, color: AppColors.gold),
             title: const Text('Notifications'),
             subtitle: const Text('Eclipse countdown alerts'),
             trailing: const Icon(Icons.chevron_right, color: AppColors.goldDim),
