@@ -24,6 +24,7 @@ dependencies:
   google_mobile_ads: ^5.2.0
   camera: ^0.11.0
   vector_math: ^2.1.4
+  permission_handler: ^11.0.1
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +49,7 @@ flutter:
     - assets/geo/2025_lunar_partial.json
     - assets/geo/2027_spain_path.json
     - assets/geojson/
+    - assets/eclipse.riv
     - assets/geojson/2026_total_solar_centerline.json
     - assets/geojson/2026_total_solar_umbra.json
     - assets/geojson/2026_total_solar_penumbra.json
