@@ -2,6 +2,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../core/services/eclipse_timing_engine.dart';
+import '../../core/services/eclipse_engine.dart';
 
 class PhotographerModeScreenSimple extends StatefulWidget {
   const PhotographerModeScreenSimple({super.key});
@@ -62,11 +64,55 @@ class _PhotographerModeScreenSimpleState
       );
     }
 
+    final event = EclipseEngine.getNextEvent(DateTime.now());
+    final now = DateTime.now();
+
+    final isDiamond = EclipseTimingEngine.isDiamondRing(
+      now: now,
+      peak: event.peakTime,
+    );
+
+    final isTotality = EclipseTimingEngine.isTotality(
+      now: now,
+      start: event.startTime,
+      end: event.endTime,
+    );
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
           CameraPreview(_controller!),
+
+          /// AUTO DIAMOND RING OVERLAY
+          if (isDiamond)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.transparent,
+                      Colors.orange.withOpacity(0.35),
+                      Colors.black,
+                    ],
+                    radius: 0.85,
+                  ),
+                ),
+                child: const Center(
+                  child: Text(
+                    "◆ DIAMOND RING ◆",
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(blurRadius: 20, color: Colors.black),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
           /// Countdown overlay
           Positioned(
@@ -75,7 +121,7 @@ class _PhotographerModeScreenSimpleState
             right: 0,
             child: Center(
               child: Text(
-                "TOTALITY IN 00:01:42",
+                isTotality ? "⚫ TOTALITY ⚫" : "TOTALITY IN 00:01:42",
                 style: TextStyle(
                   color: Colors.amber.shade200,
                   fontSize: 22,

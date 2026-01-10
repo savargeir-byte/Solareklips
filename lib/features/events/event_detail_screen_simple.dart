@@ -5,7 +5,8 @@ import '../../core/services/shadow_engine.dart';
 import '../../core/services/location_service.dart';
 import '../../core/pro/pro_state.dart';
 import '../../ui/widgets/eclipse_rive.dart';
-import '../../ui/widgets/path_painter.dart';
+import '../../widgets/animated_path_painter.dart';
+import '../../widgets/path_scrubber.dart';
 import '../photographer/photographer_mode_screen_simple.dart';
 import '../paywall/pro_upsell_sheet.dart';
 
@@ -21,6 +22,7 @@ class EventDetailScreenSimple extends StatefulWidget {
 class _EventDetailScreenSimpleState extends State<EventDetailScreenSimple> {
   Duration? _totalityDuration;
   bool _loadingLocation = true;
+  double _progress = 0.0;
 
   @override
   void initState() {
@@ -54,14 +56,35 @@ class _EventDetailScreenSimpleState extends State<EventDetailScreenSimple> {
       ),
       body: Column(
         children: [
-          // Rive animation OR path painter
+          // Rive animation OR animated path painter
           Expanded(
             child: widget.event.type == EclipseType.solarTotal
                 ? EclipseRive(totality: true)
                 : CustomPaint(
-                    painter: PathPainter(widget.event.pathGeoJson),
+                    painter: AnimatedPathPainter(
+                      widget.event.pathGeoJson,
+                      _progress,
+                    ),
                     child: Container(),
                   ),
+          ),
+          // Path scrubber
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: PathScrubber(
+              progress: _progress,
+              onChanged: (v) => setState(() => _progress = v),
+            ),
+          ),
+          // Time label
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              "Shadow progress: ${widget.event.startTime.add(
+                widget.event.endTime.difference(widget.event.startTime) * _progress,
+              ).toUtc().toString().substring(0, 16)}",
+              style: const TextStyle(color: Colors.white54, fontSize: 12),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
