@@ -1,6 +1,7 @@
 // lib/features/home/home_screen_simple_demo.dart
 import 'package:flutter/material.dart';
 import '../../core/services/eclipse_engine.dart';
+import '../../core/education/education_state.dart';
 import '../../ui/widgets/hero_today_card.dart';
 
 /// Demo screen showing the simplified architecture components
@@ -23,6 +24,27 @@ class HomeScreenSimpleDemo extends StatelessWidget {
           
           // Hero Today Card (tappable countdown)
           const HeroTodayCard(),
+
+          const SizedBox(height: 16),
+
+          // Education Mode Toggle
+          AnimatedBuilder(
+            animation: EducationState.instance,
+            builder: (context, _) {
+              return SwitchListTile(
+                title: const Text(
+                  "Education Mode",
+                  style: TextStyle(color: Colors.white),
+                ),
+                subtitle: const Text(
+                  "Learn what is happening and why",
+                  style: TextStyle(color: Colors.white54),
+                ),
+                value: EducationState.instance.enabled,
+                onChanged: (v) => EducationState.instance.toggle(v),
+              );
+            },
+          ),
 
           const SizedBox(height: 24),
           
