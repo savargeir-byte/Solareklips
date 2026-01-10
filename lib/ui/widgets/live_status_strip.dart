@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/models/eclipse_event_simple.dart';
 
 class LiveStatusStrip extends StatelessWidget {
@@ -14,7 +15,7 @@ class LiveStatusStrip extends StatelessWidget {
 
     if (now.isBefore(event.startTime)) {
       final daysUntil = event.startTime.difference(now).inDays;
-      statusText = daysUntil > 1 
+      statusText = daysUntil > 1
           ? "Moon approaching Sun — $daysUntil days until first contact"
           : "Eclipse begins tomorrow!";
       statusColor = Colors.white54;

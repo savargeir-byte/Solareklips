@@ -8,7 +8,7 @@ class EclipsePath {
   Offset pointAt(double t) {
     if (points.isEmpty) return Offset.zero;
     if (points.length == 1) return points.first;
-    
+
     final index = (points.length - 1) * t;
     final i = index.floor().clamp(0, points.length - 2);
     final frac = index - i;

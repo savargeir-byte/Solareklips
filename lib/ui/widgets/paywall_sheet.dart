@@ -104,25 +104,25 @@ class PaywallSheet extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Features list
-              _FeatureItem(
+              const _FeatureItem(
                 icon: Icons.camera_enhance,
                 title: 'Manual Camera Controls',
                 description: 'Platform-optimized controls for perfect shots',
               ),
               const SizedBox(height: 16),
-              _FeatureItem(
+              const _FeatureItem(
                 icon: Icons.science,
                 title: 'Practice Mode',
                 description: 'Simulated eclipses to test your settings',
               ),
               const SizedBox(height: 16),
-              _FeatureItem(
+              const _FeatureItem(
                 icon: Icons.layers,
                 title: 'Advanced Overlays',
                 description: 'Real-time AR guides and phase indicators',
               ),
               const SizedBox(height: 16),
-              _FeatureItem(
+              const _FeatureItem(
                 icon: Icons.accessibility_new,
                 title: 'Unlimited Access',
                 description: 'All future PRO features included',
@@ -287,9 +287,8 @@ class _PricingOption extends StatelessWidget {
               ? const Color(0xFFE4B85F).withOpacity(0.15)
               : Colors.grey.shade900,
           border: Border.all(
-            color: isRecommended
-                ? const Color(0xFFE4B85F)
-                : Colors.grey.shade800,
+            color:
+                isRecommended ? const Color(0xFFE4B85F) : Colors.grey.shade800,
             width: isRecommended ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(16),

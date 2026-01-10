@@ -1,9 +1,12 @@
 // lib/features/photographer/photographer_mode_screen_simple.dart
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../core/services/eclipse_timing_engine.dart';
 import '../../core/services/eclipse_engine.dart';
+import '../../core/photo/camera_engine.dart';
+import '../../core/photo/photographer_presets.dart';
+import '../../core/photo/photographer_auto_trigger.dart';
+import '../../widgets/photographer_camera_view.dart';
 
 class PhotographerModeScreenSimple extends StatefulWidget {
   const PhotographerModeScreenSimple({super.key});
@@ -15,44 +18,51 @@ class PhotographerModeScreenSimple extends StatefulWidget {
 
 class _PhotographerModeScreenSimpleState
     extends State<PhotographerModeScreenSimple> {
-  CameraController? _controller;
   bool _ready = false;
+  String _activePreset = "AUTO";
 
   @override
   void initState() {
     super.initState();
     _initCamera();
+    PhotographerAutoTrigger.enabled = true;
   }
 
   Future<void> _initCamera() async {
     await Permission.camera.request();
-    final cameras = await availableCameras();
-    if (cameras.isEmpty) {
-      setState(() => _ready = false);
-      return;
-    }
-    
-    final cam = cameras.first;
-
-    _controller = CameraController(
-      cam,
-      ResolutionPreset.max,
-      enableAudio: false,
-    );
-
-    await _controller!.initialize();
-
-    // Eclipse-friendly defaults
-    await _controller!.setExposureMode(ExposureMode.locked);
-    await _controller!.setFocusMode(FocusMode.locked);
-
     setState(() => _ready = true);
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    CameraEngine.dispose();
+    PhotographerAutoTrigger.enabled = false;
     super.dispose();
+  }
+
+  Future<void> _applyPreset(String preset) async {
+    setState(() => _activePreset = preset);
+
+    switch (preset) {
+      case "PARTIAL":
+        await CameraEngine.setManualExposure(
+          iso: PhotographerPresets.partial.iso,
+          shutter: PhotographerPresets.partial.shutter,
+        );
+        break;
+      case "DIAMOND":
+        await CameraEngine.setManualExposure(
+          iso: PhotographerPresets.diamondRing.iso,
+          shutter: PhotographerPresets.diamondRing.shutter,
+        );
+        break;
+      case "TOTALITY":
+        await CameraEngine.setManualExposure(
+          iso: PhotographerPresets.totality.iso,
+          shutter: PhotographerPresets.totality.shutter,
+        );
+        break;
+    }
   }
 
   @override
@@ -82,7 +92,7 @@ class _PhotographerModeScreenSimpleState
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          CameraPreview(_controller!),
+          const PhotographerCameraView(),
 
           /// AUTO DIAMOND RING OVERLAY
           if (isDiamond)
@@ -126,9 +136,7 @@ class _PhotographerModeScreenSimpleState
                   color: Colors.amber.shade200,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  shadows: const [
-                    Shadow(blurRadius: 20, color: Colors.black)
-                  ],
+                  shadows: const [Shadow(blurRadius: 20, color: Colors.black)],
                 ),
               ),
             ),
@@ -154,15 +162,30 @@ class _PhotographerModeScreenSimpleState
   }
 
   Widget _preset(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: Colors.black.withOpacity(0.6),
-        border: Border.all(color: Colors.amber),
+    final isActive = _activePreset == label;
+    return GestureDetector(
+      onTap: () => _applyPreset(label),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          color: isActive
+              ? Colors.amber.withOpacity(0.3)
+              : Colors.black.withOpacity(0.6),
+          border: Border.all(
+            color: isActive ? Colors.amber : Colors.amber.withOpacity(0.5),
+            width: isActive ? 2 : 1,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isActive ? Colors.amber : Colors.amber.withOpacity(0.7),
+            fontSize: 14,
+            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
       ),
-      child: Text(label,
-          style: const TextStyle(color: Colors.amber, fontSize: 14)),
     );
   }
 }

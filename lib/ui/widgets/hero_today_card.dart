@@ -1,5 +1,6 @@
 // lib/ui/widgets/hero_today_card.dart
 import 'package:flutter/material.dart';
+
 import '../../core/services/eclipse_engine.dart';
 import '../../features/events/event_detail_screen_simple.dart';
 import 'live_countdown_text.dart';
@@ -34,7 +35,8 @@ class HeroTodayCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text("NEXT BIG EVENT",
-                style: TextStyle(color: Colors.white70, fontSize: 12, letterSpacing: 1.2)),
+                style: TextStyle(
+                    color: Colors.white70, fontSize: 12, letterSpacing: 1.2)),
             const SizedBox(height: 12),
             Text(event.title,
                 style: const TextStyle(

@@ -28,57 +28,71 @@ lib/
 ## 🧩 Components
 
 ### 1️⃣ EclipseEventSimple Model
+
 `lib/core/models/eclipse_event_simple.dart`
 
 Simple, focused eclipse event model with:
+
 - Basic event info (id, dates, type, subtype)
 - Helper methods (duration, timeUntilPeak)
 - No complex dependencies
 
 ### 2️⃣ EclipseEngine Service
+
 `lib/core/services/eclipse_engine.dart`
 
 Local science engine for:
+
 - Finding next big event
 - Calculating progress
 - No backend dependency (JSON later)
 
 ### 3️⃣ HeroTodayCard Widget
+
 `lib/ui/widgets/hero_today_card.dart`
 
 "TODAY IN THE SKY" hero card that fixes the usage problem:
+
 - Shows moon phase
 - Shows next visible event
 - Beautiful gradient design
 
 ### 4️⃣ NextBigEventCard Widget
+
 `lib/ui/widgets/next_big_event_card.dart` (updated)
 
 Clickable card for next major event:
+
 - Countdown display
 - Navigates to detail screen
 - Prominent CTA
 
 ### 5️⃣ EventDetailScreenSimple
+
 `lib/features/events/event_detail_screen_simple.dart`
 
 Detail screen where WOW happens:
+
 - Eclipse animation
 - Event information
 - "Photographer Mode" CTA with paywall
 
 ### 6️⃣ PhotographerModeScreenSimple
+
 `lib/features/photographer/photographer_mode_screen_simple.dart`
 
 Killer feature shell:
+
 - Camera preview placeholder
 - Countdown to totality
 - Preset display
 
 ### 7️⃣ PaywallSheetSimple
+
 `lib/ui/widgets/paywall_sheet_simple.dart`
 
 Non-annoying paywall:
+
 - Clean design
 - Clear value proposition
 - Lifetime pricing (€14.99)

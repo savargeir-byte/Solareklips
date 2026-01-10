@@ -3,19 +3,23 @@
 This file should contain a Rive animation with:
 
 ## Structure
+
 - Artboard with State Machine named "ECLIPSE"
 - Boolean input named "totality"
 
 ## Visual Elements
+
 - Eclipse ring
 - Corona glow effect
 - Smooth transitions between states
 
 ## States
+
 - Normal eclipse (totality = false)
 - Total eclipse with corona (totality = true)
 
 ## How to create
+
 1. Go to https://rive.app
 2. Create new file
 3. Design eclipse with ring and corona

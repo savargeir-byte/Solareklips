@@ -130,7 +130,8 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
             children: [
               // Custom app bar
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -214,7 +215,8 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
                                           ),
                                           decoration: BoxDecoration(
                                             color: const Color(0xFFE4B85F),
-                                            borderRadius: BorderRadius.circular(4),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
                                           ),
                                           child: const Text(
                                             'PRO',
@@ -250,7 +252,7 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
                   ],
                 ),
               ),
-              
+
               // Scrollable content
               Expanded(
                 child: ListView(
@@ -309,7 +311,8 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
                     if (_currentMode == CameraMode.practice)
                       const PracticeModeCountdown(),
 
-                    if (_currentMode == CameraMode.practice) const SizedBox(height: 20),
+                    if (_currentMode == CameraMode.practice)
+                      const SizedBox(height: 20),
 
                     // Header
                     const Text(
@@ -394,7 +397,8 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
                                     label: 'Baily\'s Beads\n15 shots / 0.5s',
                                     onPressed: () => _startIntervalTimer(
                                       shots: 15,
-                                      interval: const Duration(milliseconds: 500),
+                                      interval:
+                                          const Duration(milliseconds: 500),
                                     ),
                                   ),
                                   _IntervalButton(
@@ -408,7 +412,8 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
                                     label: 'Diamond Ring\n5 shots / 0.3s',
                                     onPressed: () => _startIntervalTimer(
                                       shots: 5,
-                                      interval: const Duration(milliseconds: 300),
+                                      interval:
+                                          const Duration(milliseconds: 300),
                                     ),
                                   ),
                                 ],
@@ -449,7 +454,8 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
                               const SizedBox(height: 14),
 
                               // Platform-specific controls
-                              if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+                              if (Theme.of(context).platform ==
+                                  TargetPlatform.iOS) ...[
                                 // iOS: Presets + Exposure bias
                                 _ManualControlRow(
                                   label: 'Preset',
@@ -627,8 +633,8 @@ class _PhotographyAssistantState extends State<PhotographyAssistant> {
         title: const Text('Exposure Bias'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          children: ['-1.0 EV', '-0.3 EV', '0 EV', '+0.7 EV', '+1.0 EV']
-              .map((ev) {
+          children:
+              ['-1.0 EV', '-0.3 EV', '0 EV', '+0.7 EV', '+1.0 EV'].map((ev) {
             return ListTile(
               title: Text(ev),
               onTap: () => Navigator.pop(context),

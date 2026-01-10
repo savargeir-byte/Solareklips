@@ -1,24 +1,26 @@
 // lib/features/events/event_detail_screen_simple.dart
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import '../../core/models/eclipse_event_simple.dart';
-import '../../core/services/shadow_engine.dart';
-import '../../core/services/location_service.dart';
-import '../../core/pro/pro_state.dart';
-import '../../core/education/education_state.dart';
+
 import '../../core/education/education_content.dart';
-import '../../core/education/education_timeline.dart';
+import '../../core/education/education_state.dart';
 import '../../core/geo/eclipse_path.dart';
 import '../../core/geo/path_progress.dart';
+import '../../core/models/eclipse_event_simple.dart';
 import '../../core/photo/photographer_engine.dart';
+import '../../core/photo/photographer_auto_trigger.dart';
+import '../../core/pro/pro_state.dart';
+import '../../core/services/location_service.dart';
+import '../../core/services/shadow_engine.dart';
 import '../../ui/widgets/eclipse_rive.dart';
 import '../../widgets/eclipse_path_painter.dart';
+import '../../widgets/education_scrubber_text.dart';
 import '../../widgets/live_dot.dart';
 import '../../widgets/live_path_scrubber.dart';
-import '../../widgets/education_scrubber_text.dart';
 import '../../widgets/photographer_overlay.dart';
-import '../photographer/photographer_mode_screen_simple.dart';
 import '../paywall/pro_upsell_sheet.dart';
+import '../photographer/photographer_mode_screen_simple.dart';
 
 class EventDetailScreenSimple extends StatefulWidget {
   final EclipseEventSimple event;
@@ -45,6 +47,13 @@ class _EventDetailScreenSimpleState extends State<EventDetailScreenSimple> {
   void _startLiveUpdates() {
     _liveTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!ProState.isPro && mounted) {
+        final liveProgress = eclipseProgress(
+          now: DateTime.now(),
+          start: widget.event.startTime,
+          end: widget.event.endTime,
+        );
+        // Trigger photographer auto-capture at diamond ring
+        PhotographerAutoTrigger.onProgress(liveProgress);
         setState(() {});
       }
     });
@@ -147,9 +156,10 @@ class _EventDetailScreenSimpleState extends State<EventDetailScreenSimple> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     "Shadow progress: ${widget.event.startTime.add(
-                      widget.event.endTime.difference(widget.event.startTime) *
-                          currentProgress,
-                    ).toUtc().toString().substring(0, 16)}",
+                          widget.event.endTime
+                                  .difference(widget.event.startTime) *
+                              currentProgress,
+                        ).toUtc().toString().substring(0, 16)}",
                     style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ),

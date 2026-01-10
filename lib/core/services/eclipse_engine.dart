@@ -9,18 +9,14 @@ class EclipseEngine {
   ];
 
   static EclipseEventSimple getNextEvent(DateTime now) {
-    final upcoming = allEvents
-        .where((e) => e.peakTime.isAfter(now))
-        .toList()
+    final upcoming = allEvents.where((e) => e.peakTime.isAfter(now)).toList()
       ..sort((a, b) => a.peakTime.compareTo(b.peakTime));
     return upcoming.first;
   }
 
   static List<EclipseEventSimple> timeline({int years = 5}) {
     final limit = DateTime.now().add(Duration(days: 365 * years));
-    return allEvents
-        .where((e) => e.peakTime.isBefore(limit))
-        .toList();
+    return allEvents.where((e) => e.peakTime.isBefore(limit)).toList();
   }
 
   static Duration countdown(EclipseEventSimple e) =>

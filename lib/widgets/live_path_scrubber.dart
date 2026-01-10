@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/pro/pro_state.dart';
 
 class LivePathScrubber extends StatelessWidget {

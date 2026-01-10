@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/geo/eclipse_path.dart';
 
 class EclipsePathPainter extends CustomPainter {

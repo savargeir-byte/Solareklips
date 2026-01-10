@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/education/education_timeline.dart';
 
 class EducationScrubberText extends StatelessWidget {
