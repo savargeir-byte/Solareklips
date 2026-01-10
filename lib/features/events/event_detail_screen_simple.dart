@@ -1,4 +1,5 @@
 // lib/features/events/event_detail_screen_simple.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../core/models/eclipse_event_simple.dart';
 import '../../core/services/shadow_engine.dart';
@@ -6,9 +7,16 @@ import '../../core/services/location_service.dart';
 import '../../core/pro/pro_state.dart';
 import '../../core/education/education_state.dart';
 import '../../core/education/education_content.dart';
+import '../../core/education/education_timeline.dart';
+import '../../core/geo/eclipse_path.dart';
+import '../../core/geo/path_progress.dart';
+import '../../core/photo/photographer_engine.dart';
 import '../../ui/widgets/eclipse_rive.dart';
-import '../../widgets/animated_path_painter.dart';
-import '../../widgets/path_scrubber.dart';
+import '../../widgets/eclipse_path_painter.dart';
+import '../../widgets/live_dot.dart';
+import '../../widgets/live_path_scrubber.dart';
+import '../../widgets/education_scrubber_text.dart';
+import '../../widgets/photographer_overlay.dart';
 import '../photographer/photographer_mode_screen_simple.dart';
 import '../paywall/pro_upsell_sheet.dart';
 
@@ -24,12 +32,28 @@ class EventDetailScreenSimple extends StatefulWidget {
 class _EventDetailScreenSimpleState extends State<EventDetailScreenSimple> {
   Duration? _totalityDuration;
   bool _loadingLocation = true;
-  double _progress = 0.0;
+  double _scrubberValue = 0.0;
+  Timer? _liveTimer;
 
   @override
   void initState() {
     super.initState();
     _calculateTotality();
+    _startLiveUpdates();
+  }
+
+  void _startLiveUpdates() {
+    _liveTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!ProState.isPro && mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _liveTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _calculateTotality() async {
@@ -50,6 +74,27 @@ class _EventDetailScreenSimpleState extends State<EventDetailScreenSimple> {
 
   @override
   Widget build(BuildContext context) {
+    // Convert GeoJSON to Offset points for path
+    final pathPoints = widget.event.pathGeoJson
+        .map((point) => Offset(
+              (point[1] + 180) / 360 * 350,
+              (90 - point[0]) / 180 * 300,
+            ))
+        .toList();
+    final eclipsePath = EclipsePath(pathPoints);
+
+    // Calculate live progress or use scrubber
+    final liveProgress = eclipseProgress(
+      now: DateTime.now(),
+      start: widget.event.startTime,
+      end: widget.event.endTime,
+    );
+    final currentProgress = ProState.isPro ? _scrubberValue : liveProgress;
+
+    // Check if photographer mode should trigger
+    final showPhotographerOverlay =
+        PhotographerEngine.shouldTriggerDiamondRing(currentProgress);
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -63,27 +108,39 @@ class _EventDetailScreenSimpleState extends State<EventDetailScreenSimple> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Rive animation OR animated path painter
+                // Rive animation OR live eclipse path
                 SizedBox(
                   height: 300,
-                  child: widget.event.type == EclipseType.solarTotal
-                      ? EclipseRive(totality: true)
-                      : CustomPaint(
-                          painter: AnimatedPathPainter(
-                            widget.event.pathGeoJson,
-                            _progress,
+                  child: Stack(
+                    children: [
+                      if (widget.event.type == EclipseType.solarTotal)
+                        EclipseRive(totality: currentProgress > 0.95)
+                      else ...[
+                        CustomPaint(
+                          size: const Size(350, 300),
+                          painter: EclipsePathPainter(
+                            eclipsePath,
+                            currentProgress,
                           ),
-                          child: Container(),
                         ),
-                ),
-                // Path scrubber
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: PathScrubber(
-                    progress: _progress,
-                    onChanged: (v) => setState(() => _progress = v),
+                        LiveDot(
+                          path: eclipsePath,
+                          progress: currentProgress,
+                        ),
+                      ],
+                      // Photographer overlay when diamond ring detected
+                      if (showPhotographerOverlay) const PhotographerOverlay(),
+                    ],
                   ),
                 ),
+                // Live Path Scrubber (PRO gated)
+                LivePathScrubber(
+                  value: currentProgress,
+                  onChanged: (v) => setState(() => _scrubberValue = v),
+                ),
+                // Education Mode: Timeline explanation
+                if (EducationState.instance.enabled)
+                  EducationScrubberText(progress: currentProgress),
                 // Time label
                 Padding(
                   padding:
@@ -91,7 +148,7 @@ class _EventDetailScreenSimpleState extends State<EventDetailScreenSimple> {
                   child: Text(
                     "Shadow progress: ${widget.event.startTime.add(
                       widget.event.endTime.difference(widget.event.startTime) *
-                          _progress,
+                          currentProgress,
                     ).toUtc().toString().substring(0, 16)}",
                     style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
