@@ -8,27 +8,23 @@ class PhotographerModeScreenSimple extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          const Center(
-            child: Text("Camera Preview",
-                style: TextStyle(color: Colors.white24, fontSize: 18)),
-          ),
-          Positioned(
-            bottom: 40,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: const [
-                Text("TOTALITY IN 00:01:12",
-                    style: TextStyle(color: Color(0xFFE4B85F), fontSize: 22, fontWeight: FontWeight.bold)),
-                SizedBox(height: 12),
-                Text("Preset: Diamond Ring",
-                    style: TextStyle(color: Colors.white70, fontSize: 16)),
-              ],
+      appBar: AppBar(
+        title: const Text("Photographer Mode"),
+        backgroundColor: Colors.transparent,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(Icons.camera_alt, size: 64, color: Colors.amber),
+            SizedBox(height: 16),
+            Text(
+              "Auto eclipse presets\nISO • Shutter • WB\nComing alive next",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

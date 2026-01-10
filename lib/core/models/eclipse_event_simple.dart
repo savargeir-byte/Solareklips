@@ -1,28 +1,31 @@
 // lib/core/models/eclipse_event_simple.dart
+
+enum EclipseType { solarTotal, solarPartial, lunarTotal, lunarPartial }
+
 class EclipseEventSimple {
   final String id;
-  final DateTime start;
-  final DateTime peak;
-  final DateTime end;
-  final String type; // solar | lunar
-  final String subtype; // total | partial | annular
   final String title;
-  final List<String> visibleFrom;
-  final bool isMajor;
+  final EclipseType type;
+  final DateTime peakTime;
+  final DateTime startTime;
+  final DateTime endTime;
+  final List<List<double>> pathGeoJson; // lat,lng
+  final String visibility;
+  final String description;
 
   EclipseEventSimple({
     required this.id,
-    required this.start,
-    required this.peak,
-    required this.end,
-    required this.type,
-    required this.subtype,
     required this.title,
-    required this.visibleFrom,
-    this.isMajor = false,
+    required this.type,
+    required this.peakTime,
+    required this.startTime,
+    required this.endTime,
+    required this.pathGeoJson,
+    required this.visibility,
+    required this.description,
   });
 
-  Duration get duration => end.difference(start);
+  Duration get duration => endTime.difference(startTime);
 
-  Duration timeUntilPeak() => peak.difference(DateTime.now());
+  Duration timeUntilPeak() => peakTime.difference(DateTime.now());
 }
