@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/constants.dart';
-import 'features/home/home_screen.dart';
+import 'features/home/home_screen_simple_demo.dart';
 import 'ui/theme/theme_service.dart';
 
 class EclipseMapApp extends ConsumerWidget {
@@ -25,7 +25,7 @@ class EclipseMapApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocales.supported,
-      home: const HomeScreen(),
+      home: const HomeScreenSimpleDemo(),
     );
   }
 }

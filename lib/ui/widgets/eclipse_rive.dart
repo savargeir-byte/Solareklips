@@ -1,34 +1,37 @@
 // lib/ui/widgets/eclipse_rive.dart
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart';
 
-class EclipseRive extends StatefulWidget {
+class EclipseRive extends StatelessWidget {
   final bool totality;
   const EclipseRive({super.key, required this.totality});
 
   @override
-  State<EclipseRive> createState() => _EclipseRiveState();
-}
-
-class _EclipseRiveState extends State<EclipseRive> {
-  SMIBool? _totality;
-
-  void _onInit(Artboard artboard) {
-    final controller =
-        StateMachineController.fromArtboard(artboard, 'ECLIPSE');
-    if (controller != null) {
-      artboard.addController(controller);
-      _totality = controller.findInput<bool>('totality') as SMIBool?;
-      _totality?.value = widget.totality;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return RiveAnimation.asset(
-      'assets/eclipse.riv',
-      fit: BoxFit.cover,
-      onInit: _onInit,
+    // Placeholder until eclipse.riv is created
+    return Container(
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          colors: totality
+              ? [
+                  Colors.black,
+                  Colors.amber.withOpacity(0.3),
+                  Colors.black,
+                ]
+              : [
+                  Colors.amber,
+                  Colors.orange,
+                  Colors.black,
+                ],
+          radius: 0.8,
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          totality ? Icons.brightness_1 : Icons.brightness_2,
+          size: 120,
+          color: totality ? Colors.white : Colors.amber,
+        ),
+      ),
     );
   }
 }

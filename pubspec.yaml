@@ -49,7 +49,6 @@ flutter:
     - assets/geo/2025_lunar_partial.json
     - assets/geo/2027_spain_path.json
     - assets/geojson/
-    - assets/eclipse.riv
     - assets/geojson/2026_total_solar_centerline.json
     - assets/geojson/2026_total_solar_umbra.json
     - assets/geojson/2026_total_solar_penumbra.json
